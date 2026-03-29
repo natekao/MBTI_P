@@ -1,0 +1,1 @@
+- [反派角色設定（德叔與霧中影）](project_villain_characters.md) — 兩個反派的核心動機、外貌、與小明關係及故事功能
