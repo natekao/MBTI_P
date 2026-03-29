@@ -1,848 +1,335 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MBTI 性格類型介紹與測驗</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小明的冒險故事</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: 'Microsoft JhengHei', '微軟正黑體', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
+    body {
+      background: #faf7f2;
+      color: #2c2c2c;
+      font-family: "Noto Serif TC", "Georgia", "思源宋體", serif;
+      line-height: 2;
+      padding: 2rem 1rem 4rem;
+    }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+    #wrapper {
+      max-width: 720px;
+      margin: 0 auto;
+    }
 
-        header {
-            text-align: center;
-            padding: 40px 20px;
-            color: white;
-        }
+    /* 頁首 */
+    header {
+      text-align: center;
+      padding: 3rem 0 2.5rem;
+      border-bottom: 1px solid #d6cfc4;
+      margin-bottom: 3rem;
+    }
+    header h1 {
+      font-size: 2rem;
+      letter-spacing: 0.15em;
+      color: #3a3028;
+      font-weight: 700;
+    }
+    header p {
+      margin-top: 0.6rem;
+      font-size: 0.9rem;
+      color: #888;
+      letter-spacing: 0.1em;
+    }
 
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
+    /* 正文 */
+    #story h1 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #8b6f47;
+      background: #f0ece4;
+      border-left: 3px solid #c4a97d;
+      padding: 0.4rem 0.9rem;
+      margin: 2.8rem 0 1.2rem;
+      letter-spacing: 0.05em;
+      border-radius: 0 4px 4px 0;
+    }
 
-        header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
+    #story h2 {
+      font-size: 1.2rem;
+      color: #3a3028;
+      margin: 2.5rem 0 1rem;
+      border-bottom: 1px solid #d6cfc4;
+      padding-bottom: 0.3rem;
+    }
 
-        /* 性格類型區塊 */
-        .personality-section {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
+    #story p {
+      font-size: 1.05rem;
+      margin-bottom: 1.2rem;
+      text-align: justify;
+      text-indent: 2em;
+    }
 
-        .personality-section h2 {
-            text-align: center;
-            color: #667eea;
-            margin-bottom: 30px;
-            font-size: 2rem;
-        }
+    #story strong {
+      color: #5a3e28;
+    }
 
-        .personality-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
+    /* 分隔線 */
+    #story hr {
+      border: none;
+      border-top: 1px dashed #d0c8bc;
+      margin: 2.5rem 0;
+    }
 
-        .personality-card {
-            background: linear-gradient(145deg, #f5f7fa 0%, #e4e8eb 100%);
-            border-radius: 15px;
-            padding: 25px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-        }
+    /* 頁尾 */
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #d6cfc4;
+      font-size: 0.82rem;
+      color: #aaa;
+      letter-spacing: 0.08em;
+    }
 
-        .personality-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-        }
-
-        .personality-card h3 {
-            color: #764ba2;
-            margin-bottom: 10px;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .personality-card .type-code {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-        }
-
-        .personality-card p {
-            line-height: 1.8;
-            color: #555;
-            font-size: 0.95rem;
-        }
-
-        /* 類型分類 */
-        .type-category {
-            margin-bottom: 30px;
-        }
-
-        .type-category h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #667eea;
-        }
-
-        /* 測驗區塊 */
-        .quiz-section {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-
-        .quiz-section h2 {
-            text-align: center;
-            color: #667eea;
-            margin-bottom: 30px;
-            font-size: 2rem;
-        }
-
-        .quiz-intro {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #666;
-        }
-
-        .question {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-
-        .question h4 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-        }
-
-        .question-number {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 30px;
-            margin-right: 10px;
-        }
-
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .option {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .option:hover {
-            border-color: #667eea;
-            background: #f0f4ff;
-        }
-
-        .option.selected {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #667eea15, #764ba215);
-        }
-
-        .option input {
-            display: none;
-        }
-
-        .option-marker {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #ccc;
-            border-radius: 50%;
-            margin-right: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-
-        .option.selected .option-marker {
-            border-color: #667eea;
-            background: #667eea;
-        }
-
-        .option.selected .option-marker::after {
-            content: '✓';
-            color: white;
-            font-size: 12px;
-        }
-
-        .submit-btn {
-            display: block;
-            width: 100%;
-            max-width: 300px;
-            margin: 30px auto 0;
-            padding: 15px 40px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .submit-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-
-        .submit-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        /* 結果區塊 */
-        .result-section {
-            display: none;
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            margin-top: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            text-align: center;
-        }
-
-        .result-section.show {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .result-type {
-            font-size: 4rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 20px;
-        }
-
-        .result-name {
-            font-size: 1.8rem;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .result-description {
-            text-align: left;
-            line-height: 2;
-            color: #555;
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 15px;
-        }
-
-        .dimension-scores {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .dimension {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        .dimension-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .dimension-bar {
-            height: 10px;
-            background: #e0e0e0;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .dimension-fill {
-            height: 100%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 5px;
-            transition: width 0.5s ease;
-        }
-
-        .restart-btn {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 15px 40px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .restart-btn:hover {
-            transform: scale(1.05);
-        }
-
-        /* 響應式設計 */
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.8rem;
-            }
-
-            .personality-section, .quiz-section {
-                padding: 20px;
-            }
-
-            .personality-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .result-type {
-                font-size: 3rem;
-            }
-        }
-
-        /* 導航標籤 */
-        .nav-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        .nav-tab {
-            padding: 10px 25px;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 1rem;
-        }
-
-        .nav-tab:hover, .nav-tab.active {
-            background: white;
-            color: #667eea;
-        }
-
-        .type-group {
-            display: none;
-        }
-
-        .type-group.active {
-            display: block;
-        }
-    </style>
+    /* 手機優化 */
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.5rem; }
+      #story p { font-size: 1rem; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>MBTI 十六型人格</h1>
-            <p>探索你的性格類型，了解真實的自己</p>
-        </header>
+<div id="wrapper">
 
-        <!-- 性格介紹區塊 -->
-        <section class="personality-section">
-            <h2>十六種性格類型介紹</h2>
+  <header>
+    <h1>小明的冒險故事</h1>
+    <p>一個關於勇氣、真相與原諒的故事</p>
+  </header>
 
-            <div class="nav-tabs">
-                <button class="nav-tab active" data-group="analysts">分析家 (NT)</button>
-                <button class="nav-tab" data-group="diplomats">外交家 (NF)</button>
-                <button class="nav-tab" data-group="sentinels">守護者 (SJ)</button>
-                <button class="nav-tab" data-group="explorers">探險家 (SP)</button>
-            </div>
+  <div id="story"></div>
 
-            <!-- 分析家 NT -->
-            <div class="type-group active" id="analysts">
-                <div class="personality-grid">
-                    <div class="personality-card">
-                        <h3><span class="type-code">INTJ</span> 建築師</h3>
-                        <p>INTJ 被稱為「建築師」，是十六型人格中最具戰略思維的類型之一。他們擁有豐富的想像力與堅定的意志力，能夠將宏大的願景轉化為具體可行的計畫。INTJ 天生對知識充滿渴望，喜歡深入研究複雜的理論與系統，並且總是在尋找更有效率的方法來達成目標。他們獨立自主，不需要他人的認可來肯定自己的價值，反而更重視邏輯與理性的判斷。在社交場合中，INTJ 可能顯得較為冷淡或疏離，但這並非冷漠，而是他們習慣將精力投注在更有意義的事物上。他們是完美主義者，對自己和他人都有很高的標準，有時可能因此顯得過於嚴苛。INTJ 適合從事需要長遠規劃、策略分析的工作，如科學研究、工程設計或企業管理。</p>
-                    </div>
-                    <div class="personality-card">
-                        <h3><span class="type-code">INTP</span> 邏輯學家</h3>
-                        <p>INTP 被稱為「邏輯學家」，是最具哲學思維與創新精神的人格類型。他們對知識的追求永無止境，喜歡探索宇宙萬物背後的運作原理。INTP 擁有極強的分析能力，能夠看穿表象直達事物的本質，這使他們成為出色的問題解決者。然而，他們時常沉浸在自己的思想世界中，可能會忽略現實生活中的瑣事。INTP 珍視獨處的時光，因為那是他們思考與創造的最佳時機。在人際關係中，他們可能顯得有些笨拙，不擅長表達情感，但對於真正理解他們的人，他們會展現出深厚的忠誠。INTP 討厭規則與傳統的束縛，更喜歡以開放的心態探索各種可能性。他們適合從事研究、程式設計、哲學或任何需要創新思維的領域。</p>
-                    </div>
-                    <div class="personality-card">
-                        <h3><span class="type-code">ENTJ</span> 指揮官</h3>
-                        <p>ENTJ 被稱為「指揮官」，天生具備領導才能與強大的執行力。他們擁有清晰的願景與堅定的決心，能夠帶領團隊克服重重困難達成目標。ENTJ 非常重視效率，討厭浪費時間在無意義的事情上，總是直奔主題。他們具有敏銳的商業頭腦，善於發現機會並快速採取行動。在領導團隊時，ENTJ 會設定明確的目標與標準，並期待每個人都能全力以赴。他們直言不諱，有話直說的風格可能會讓某些人感到不適，但這種坦率也贏得了許多人的尊重。ENTJ 不害怕挑戰與衝突，反而將其視為成長的機會。然而，他們有時可能過於專注於目標而忽略了他人的感受。ENTJ 在商業管理、創業、法律或政治領域通常能有出色的表現。</p>
-                    </div>
-                    <div class="personality-card">
-                        <h3><span class="type-code">ENTP</span> 辯論家</h3>
-                        <p>ENTP 被稱為「辯論家」，是最具創意與口才的人格類型之一。他們思維敏捷，喜歡挑戰既有的觀念與規則，總是能從不同的角度看待問題。ENTP 熱愛智識上的交鋒，享受辯論帶來的刺激感，有時甚至會為了辯論而辯論。他們充滿好奇心，對新事物總是充滿熱情，但可能因此而缺乏持續性，容易對已經開始的計畫失去興趣。ENTP 不喜歡被規則束縛，更傾向於打破常規，尋找創新的解決方案。他們在社交場合中魅力十足，能夠輕鬆與各種人建立連結，但深層的情感交流對他們來說可能是一個挑戰。ENTP 需要學習傾聽他人的想法，而不只是急於表達自己的觀點。他們適合從事創業、行銷、法律或任何需要創新與說服力的工作。</p>
-                    </div>
-                </div>
-            </div>
+  <footer>© 小明的冒險故事 · 以 Claude Code 協作創作</footer>
 
-            <!-- 外交家 NF -->
-            <div class="type-group" id="diplomats">
-                <div class="personality-grid">
-                    <div class="personality-card">
-                        <h3><span class="type-code">INFJ</span> 提倡者</h3>
-                        <p>INFJ 被稱為「提倡者」，是十六型人格中最稀有的類型之一。他們擁有深刻的洞察力與強烈的理想主義，總是希望能夠讓世界變得更美好。INFJ 具有獨特的能力，能夠理解他人內心深處的情感與動機，這使他們成為出色的傾聽者與輔導者。他們追求有意義的人際關係，不滿足於膚淺的社交，而是渴望真正深入的心靈交流。INFJ 有著豐富的內心世界，時常沉浸在自己的思想與幻想中。他們對自己的價值觀非常堅持，一旦認定某件事是正確的，就會全力以赴去實現。然而，INFJ 可能會因為過於在意他人的需求而忽略自己的感受，導致精力耗竭。他們適合從事諮商、寫作、教育或任何能夠幫助他人的工作。</p>
-                    </div>
-                    <div class="personality-card">
-                        <h3><span class="type-code">INFP</span> 調停者</h3>
-                        <p>INFP 被稱為「調停者」，是最具詩意與理想色彩的人格類型。他們擁有豐富的想像力與深刻的情感，對藝術、文學與人文領域有著天然的親和力。INFP 追求真實與真誠，討厭虛偽與表面功夫，總是希望能夠活出最真實的自己。他們有著強烈的價值觀，會為自己相信的理念奮戰到底。在人際關係中，INFP 渴望深層的情感連結，重視理解與被理解。他們可能顯得有些內向與害羞，但內心其實充滿熱情與創意。INFP 時常陷入自我懷疑，對自己要求過高，需要學習接納自己的不完美。他們對批評非常敏感，容易將他人的評論往心裡去。INFP 適合從事寫作、藝術創作、心理諮商或任何能讓他們表達內心世界的工作。</p>
-                    </div>
-                    <div class="personality-card">
-                        <h3><span class="type-code">ENFJ</span> 主人公</h3>
-                        <p>ENFJ 被稱為「主人公」，天生具備領袖魅力與強大的感染力。他們熱情洋溢，真誠關心他人的成長與幸福，總是願意伸出援手幫助需要幫助的人。ENFJ 擁有出色的人際交往能力，能夠輕鬆建立深厚的人際關係，並在團體中扮演凝聚人心的角色。他們對他人的情緒非常敏感，能夠察覺到細微的情感變化。ENFJ 有著強烈的使命感，希望能夠對社會產生正面的影響，常常投身於公益活動或社會運動。然而，他們有時可能過於在意他人的評價，或者為了維持和諧而壓抑自己的真實感受。ENFJ 需要學習設立健康的界線，避免為他人付出過多而忽略自己的需求。他們適合從事教育、人力資源、社會工作或任何需要領導與激勵他人的職位。</p>
-                    </div>
-                    <div class="personality-card">
-                        <h3><span class="type-code">ENFP</span> 競選者</h3>
-                        <p>ENFP 被稱為「競選者」，是最具熱情與創造力的人格類型之一。他們對生活充滿好奇心，總是在尋找新的體驗與冒險。ENFP 擁有感染他人的正面能量，能夠輕鬆帶動周圍的氣氛，讓人們感到快樂與希望。他們具有豐富的想像力，喜歡探索各種可能性，討厭被規則與傳統所限制。ENFP 真誠地關心他人，善於傾聽並給予支持，是朋友眼中值得信賴的夥伴。然而，他們可能因為興趣太廣泛而難以專注在單一目標上，容易半途而廢。ENFP 討厭例行公事與重複性的工作，需要不斷的刺激與變化來保持動力。他們有時可能過於理想化，對現實的殘酷面缺乏準備。ENFP 適合從事創意產業、公關、心理諮詢或任何能讓他們發揮創意與人際能力的工作。</p>
-                    </div>
-                </div>
-            </div>
+</div>
 
-            <!-- 守護者 SJ -->
-            <div class="type-group" id="sentinels">
-                <div class="personality-grid">
-                    <div class="personality-card">
-                        <h3><span class="type-code">ISTJ</span> 物流師</h3>
-                        <p>ISTJ 被稱為「物流師」，是最可靠與負責任的人格類型之一。他們重視傳統、規則與秩序，相信通過努力工作與遵守規範可以達成目標。ISTJ 做事一絲不苟，注重細節，總是能夠準時完成任務。他們對承諾極為認真，一旦答應的事情就會全力以赴去實現。ISTJ 喜歡有條理的生活，討厭混亂與不確定性，會花時間規劃每一個步驟。在工作中，他們是可靠的執行者，能夠獨立完成複雜的任務。然而，ISTJ 可能顯得過於嚴肅或固執，不太願意嘗試新的方法。他們在情感表達上可能較為含蓄，不擅長處理情緒化的場面。ISTJ 需要學習更加開放地接受變化，以及在必要時表達自己的感受。他們適合從事會計、法律、工程或任何需要精確與可靠性的工作。</p>
-                    </div>
-                    <div class="personality-card">
-                        <h3><span class="type-code">ISFJ</span> 守衛者</h3>
-                        <p>ISFJ 被稱為「守衛者」，是最具奉獻精神與溫暖特質的人格類型。他們默默付出，不求回報，總是將他人的需求放在自己之前。ISFJ 有著極強的責任感，對家庭、朋友與工作都投入大量的心力。他們記性很好，會記得每一個重要的細節與日期，用心維護與他人的關係。ISFJ 喜歡和諧的環境，會盡力避免衝突，有時甚至會犧牲自己的立場來維持和平。他們對傳統與習俗有著深厚的情感，珍視那些經過時間考驗的價值觀。然而，ISFJ 可能過於在意他人的評價，害怕讓人失望。他們需要學習說「不」，並且照顧好自己的需求。ISFJ 的付出常常被視為理所當然，但他們真的需要被感謝與認可。他們適合從事護理、教育、行政或任何需要細心與關懷的工作。</p>
-                    </div>
-                    <div class="personality-card">
-                        <h3><span class="type-code">ESTJ</span> 總經理</h3>
-                        <p>ESTJ 被稱為「總經理」，是最具組織能力與執行力的人格類型。他們相信規則與秩序，擅長建立系統並確保每個人都遵守規範。ESTJ 天生具備領導才能，能夠清楚地傳達指令並督促團隊達成目標。他們務實且直接，不喜歡繞圈子，總是以效率為優先考量。ESTJ 對工作極為認真，以身作則，期待他人也能達到同樣的標準。他們重視傳統與社會規範，認為這些是維持社會運作的重要基石。然而，ESTJ 可能顯得過於強勢或專制，不太願意傾聽不同的意見。他們在處理情感問題時可能顯得笨拙，更習慣用邏輯來解決一切。ESTJ 需要學習更加尊重他人的感受與觀點，培養同理心。他們適合從事管理、軍事、法律執行或任何需要組織與領導能力的職位。</p>
-                    </div>
-                    <div class="personality-card">
-                        <h3><span class="type-code">ESFJ</span> 執政官</h3>
-                        <p>ESFJ 被稱為「執政官」，是最具社交能力與關懷特質的人格類型之一。他們天生喜歡照顧他人，總是能夠察覺到周圍人的需求並主動提供幫助。ESFJ 重視和諧的人際關係，會努力維護團體的凝聚力與向心力。他們喜歡社交活動，擅長組織聚會並確保每個人都感到受歡迎。ESFJ 對傳統與禮儀非常重視，認為這些是維繫社會連結的重要紐帶。他們忠誠可靠，是朋友和家人可以依賴的後盾。然而，ESFJ 可能過於在意他人的評價，容易因為批評而受傷。他們有時會為了取悅他人而忽略自己的需求，或者過度干涉他人的生活。ESFJ 需要學習接受並非所有人都會喜歡自己這個事實，並且尊重他人的界限。他們適合從事醫療照護、教育、活動企劃或任何需要人際互動的工作。</p>
-                    </div>
-                </div>
-            </div>
+<!-- 故事內容（Markdown 格式） -->
+<script id="md-source" type="text/markdown">
+在小明9歲的生日那天，小明的阿姨發現爐火漸漸變弱，於是她叫小明去附近的森林裡撿些枯樹枝回來。
+小明才踏上路，就遇見了小花，小花也想要同行。
 
-            <!-- 探險家 SP -->
-            <div class="type-group" id="explorers">
-                <div class="personality-grid">
-                    <div class="personality-card">
-                        <h3><span class="type-code">ISTP</span> 鑑賞家</h3>
-                        <p>ISTP 被稱為「鑑賞家」，是最具動手能力與冷靜特質的人格類型。他們對機械、工具與技術有著天生的興趣，喜歡親手拆解並理解事物的運作原理。ISTP 擅長在壓力下保持冷靜，能夠快速分析問題並找出解決方案。他們喜歡獨立工作，不太需要他人的指導或監督，更偏好以自己的方式完成任務。ISTP 活在當下，享受即時的感官體驗，對長遠規劃較不感興趣。他們討厭被規則束縛，喜歡保持靈活與自由。在人際關係中，ISTP 可能顯得冷漠或疏離，因為他們不擅長表達情感。然而，他們對真正在乎的人其實非常忠誠。ISTP 可能會冒不必要的風險來追求刺激，需要學習考慮行動的後果。他們適合從事工程、技術維修、急救人員或任何需要動手解決問題的工作。</p>
-                    </div>
-                    <div class="personality-card">
-                        <h3><span class="type-code">ISFP</span> 探險家</h3>
-                        <p>ISFP 被稱為「探險家」，是最具藝術氣質與溫和特性的人格類型。他們對美有著敏銳的感受力，能夠在日常生活中發現他人忽略的美好事物。ISFP 活在當下，享受每一個瞬間，不太擔心未來或糾結過去。他們具有強烈的個人價值觀，但不會將其強加於他人，更傾向於用行動而非言語來表達自己。ISFP 喜歡和諧的環境，會盡量避免衝突與對抗。他們對他人的感受非常敏感，能夠提供溫暖的支持與陪伴。然而，ISFP 可能過於迴避衝突，即使在需要表達立場的時候也選擇沉默。他們有時會因為過於在意他人的感受而壓抑自己的需求。ISFP 需要學習更加勇敢地表達自己，並接受衝突有時是必要的。他們適合從事藝術創作、設計、音樂或任何能讓他們發揮創意的工作。</p>
-                    </div>
-                    <div class="personality-card">
-                        <h3><span class="type-code">ESTP</span> 企業家</h3>
-                        <p>ESTP 被稱為「企業家」，是最具行動力與冒險精神的人格類型。他們活力充沛，喜歡刺激與挑戰，總是準備好投入下一個冒險。ESTP 擅長察言觀色，能夠快速讀懂社交場合中的氛圍並做出適當的回應。他們思維敏捷，善於臨場應變，是危機處理的高手。ESTP 活在當下，享受即時的樂趣，對長遠的規劃較不感興趣。他們討厭被理論與抽象概念束縛，更喜歡動手實踐。ESTP 具有天生的說服力，能夠輕鬆影響他人的決定。然而，他們可能過於衝動，在行動前缺乏足夠的思考。他們有時會忽略他人的感受，顯得過於直接或冒犯。ESTP 需要學習考慮行動的長遠後果，以及更加關注他人的情感需求。他們適合從事銷售、創業、運動員或任何需要快速反應與人際互動的工作。</p>
-                    </div>
-                    <div class="personality-card">
-                        <h3><span class="type-code">ESFP</span> 表演者</h3>
-                        <p>ESFP 被稱為「表演者」，是最具表演天分與感染力的人格類型。他們熱愛生活，總是能夠找到樂趣並與他人分享快樂。ESFP 天生具有表演的才華，喜歡成為眾人關注的焦點，能夠輕鬆帶動氣氛。他們對感官體驗非常敏銳，喜歡美食、音樂、時尚與一切美好的事物。ESFP 慷慨大方，喜歡與朋友分享一切，是聚會中不可或缺的靈魂人物。他們活在當下，不太擔心未來，相信事情總會順利解決。然而，ESFP 可能過於追求即時的滿足，忽略了長遠的規劃與責任。他們對批評非常敏感，容易因為負面評價而受傷。ESFP 需要學習延遲滿足，以及面對生活中不那麼愉快的現實。他們適合從事表演藝術、娛樂產業、銷售或任何需要與人互動並帶來歡樂的工作。</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+#介紹小花這一個角色，其實他一直很喜歡小明，也一直有暗示，不過小明一直沒有感受出來
 
-        <!-- 測驗區塊 -->
-        <section class="quiz-section">
-            <h2>MBTI 性格測驗</h2>
-            <p class="quiz-intro">回答以下 10 個問題，找出你的性格傾向</p>
+小花跟上小明的腳步，悄悄將自己折好的幸運星塞進他的口袋。「路上小心。」她輕聲說，臉頰泛紅。小明只是摸了摸口袋，笑道：「妳真奇怪，都是鄰居了還這麼客氣。」小花低下頭，心裡默默嘆了口氣。
 
-            <form id="quizForm">
-                <!-- 問題 1: E/I -->
-                <div class="question">
-                    <h4><span class="question-number">1</span>在社交聚會後，你通常會感到：</h4>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q1" value="E" required>
-                            <span class="option-marker"></span>
-                            精力充沛，想要繼續與人互動
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q1" value="I">
-                            <span class="option-marker"></span>
-                            需要獨處時間來恢復精力
-                        </label>
-                    </div>
-                </div>
+#介紹小明這一個角色的性格
 
-                <!-- 問題 2: E/I -->
-                <div class="question">
-                    <h4><span class="question-number">2</span>當你需要思考重要決定時，你傾向於：</h4>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q2" value="E" required>
-                            <span class="option-marker"></span>
-                            與朋友或家人討論，透過交談釐清想法
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q2" value="I">
-                            <span class="option-marker"></span>
-                            獨自沉思，在內心深入分析各種可能性
-                        </label>
-                    </div>
-                </div>
+小明是個走到哪裡都笑嘻嘻的孩子，遇到陌生的岔路不害怕，遇到蟲子不躲避，還會蹲下來仔細研究。阿姨常說他「膽子比天大」，他卻覺得這是誇獎。一路上他跑在前頭，嘴裡哼著不成調的歌，完全沒注意到身後的小花一直默默看著他的背影。
 
-                <!-- 問題 3: S/N -->
-                <div class="question">
-                    <h4><span class="question-number">3</span>在學習新事物時，你比較喜歡：</h4>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q3" value="S" required>
-                            <span class="option-marker"></span>
-                            從具體的例子和實際操作開始
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q3" value="N">
-                            <span class="option-marker"></span>
-                            先了解整體概念和背後的理論
-                        </label>
-                    </div>
-                </div>
+#他們發現今天森林一直有奇怪的動物叫聲
 
-                <!-- 問題 4: S/N -->
-                <div class="question">
-                    <h4><span class="question-number">4</span>在日常生活中，你更關注：</h4>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q4" value="S" required>
-                            <span class="option-marker"></span>
-                            眼前的現實情況和具體細節
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q4" value="N">
-                            <span class="option-marker"></span>
-                            未來的可能性和隱含的意義
-                        </label>
-                    </div>
-                </div>
+走進森林沒多久，小花忽然停下腳步。「你有聽到嗎？」她低聲問。那是一種低沉的嗚嗚聲，不像鳥、不像蟲，從樹林深處一陣一陣傳來。小明側耳聆聽，第一次收起了笑容。「好像是從那邊來的。」他指著黑暗的樹叢，兩人對望了一眼，都沒有說話。
 
-                <!-- 問題 5: T/F -->
-                <div class="question">
-                    <h4><span class="question-number">5</span>當朋友向你傾訴煩惱時，你通常會：</h4>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q5" value="T" required>
-                            <span class="option-marker"></span>
-                            幫他們分析問題並提供解決方案
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q5" value="F">
-                            <span class="option-marker"></span>
-                            先傾聽和同理他們的感受
-                        </label>
-                    </div>
-                </div>
+樹叢忽然劇烈晃動，一個龐大的身影從黑暗中緩緩走出。那是一頭狼人——身形高大如成年男子，卻長著灰色的獸毛與銳利的爪子，黃色的眼睛在陰暗的林子裡發著幽光。小花嚇得往後退了兩步，緊緊抓住小明的袖子。
 
-                <!-- 問題 6: T/F -->
-                <div class="question">
-                    <h4><span class="question-number">6</span>在做決定時，你更重視：</h4>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q6" value="T" required>
-                            <span class="option-marker"></span>
-                            邏輯分析和客觀的事實
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q6" value="F">
-                            <span class="option-marker"></span>
-                            個人價值觀和對他人的影響
-                        </label>
-                    </div>
-                </div>
+然而奇怪的事發生了。那狼人盯著小明看了許久，沒有撲上來，反而慢慢地低下了頭，發出一聲低沉而悲傷的嗚咽。
 
-                <!-- 問題 7: T/F -->
-                <div class="question">
-                    <h4><span class="question-number">7</span>你認為在工作或學習中，更重要的是：</h4>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q7" value="T" required>
-                            <span class="option-marker"></span>
-                            追求真理和正確性，即使可能傷害到某些人
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q7" value="F">
-                            <span class="option-marker"></span>
-                            維護和諧的關係，考慮每個人的感受
-                        </label>
-                    </div>
-                </div>
+小明僵在原地，心跳得很快，卻感到一股說不清楚的熟悉感從胸口漫了上來。他不知道為什麼，腿沒有要逃跑的意思。
 
-                <!-- 問題 8: J/P -->
-                <div class="question">
-                    <h4><span class="question-number">8</span>對於計畫和安排，你的態度是：</h4>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q8" value="J" required>
-                            <span class="option-marker"></span>
-                            喜歡提前規劃，按照計畫執行會讓我安心
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q8" value="P">
-                            <span class="option-marker"></span>
-                            喜歡保持彈性，隨機應變更讓我自在
-                        </label>
-                    </div>
-                </div>
+狼人抬起前爪，輕輕碰了碰小明的臉頰，就像很久以前某個人曾經做過的動作。然後牠轉過身，用爪子在泥地上刻出兩個字——
 
-                <!-- 問題 9: J/P -->
-                <div class="question">
-                    <h4><span class="question-number">9</span>在截止日期前完成任務時，你通常會：</h4>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q9" value="J" required>
-                            <span class="option-marker"></span>
-                            提早開始，穩步推進，確保提前完成
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q9" value="P">
-                            <span class="option-marker"></span>
-                            在壓力下更有動力，往往在最後一刻完成
-                        </label>
-                    </div>
-                </div>
+「爸爸。」
 
-                <!-- 問題 10: J/P -->
-                <div class="question">
-                    <h4><span class="question-number">10</span>你的工作或生活空間通常是：</h4>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="q10" value="J" required>
-                            <span class="option-marker"></span>
-                            整齊有序，每樣東西都有固定的位置
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="q10" value="P">
-                            <span class="option-marker"></span>
-                            看似凌亂但有自己的邏輯，隨性擺放
-                        </label>
-                    </div>
-                </div>
+小明瞪大了眼睛，嘴唇顫抖。阿姨從來不肯說爸媽是怎麼消失的，只說是一場「意外」。而眼前這頭狼人，眼神裡有一種只有親人才有的溫柔。
 
-                <button type="submit" class="submit-btn">查看結果</button>
-            </form>
-        </section>
+「你⋯⋯你是我爸爸？」小明的聲音細得像風中的草葉。
 
-        <!-- 結果區塊 -->
-        <section class="result-section" id="resultSection">
-            <h2>你的 MBTI 類型是</h2>
-            <div class="result-type" id="resultType"></div>
-            <div class="result-name" id="resultName"></div>
+狼人再次低下頭，這一次，兩行淚水從那雙黃色的眼睛裡滑落，滴在乾燥的落葉上。小花鬆開了小明的袖子，望著眼前這一幕，說不出半個字。
 
-            <div class="dimension-scores" id="dimensionScores"></div>
+森林裡靜得只剩樹葉輕輕搖晃的聲音。小明跪下來，伸出顫抖的雙手，第一次抱住了那個他從未記得、卻又從未真正忘記的爸爸。
 
-            <div class="result-description" id="resultDescription"></div>
+#小花的反應，主要還是驚嚇與不可置信，但還是喜歡著小明
 
-            <button class="restart-btn" onclick="restartQuiz()">重新測驗</button>
-        </section>
-    </div>
+小花站在原地，雙腿像生了根。她的心臟還在狂跳，手心全是冷汗。那明明是一頭狼人——她從故事書裡讀過，那是會吃人的怪物。可是眼前這頭狼人正低著頭，讓小明抱著，一動也不動，像一座沉默的山。
 
-    <script>
-        // 性格類型資料
-        const personalityData = {
-            'INTJ': { name: '建築師', description: 'INTJ 被稱為「建築師」，是十六型人格中最具戰略思維的類型之一。他們擁有豐富的想像力與堅定的意志力，能夠將宏大的願景轉化為具體可行的計畫。INTJ 天生對知識充滿渴望，喜歡深入研究複雜的理論與系統，並且總是在尋找更有效率的方法來達成目標。他們獨立自主，不需要他人的認可來肯定自己的價值，反而更重視邏輯與理性的判斷。在社交場合中，INTJ 可能顯得較為冷淡或疏離，但這並非冷漠，而是他們習慣將精力投注在更有意義的事物上。他們是完美主義者，對自己和他人都有很高的標準，有時可能因此顯得過於嚴苛。INTJ 適合從事需要長遠規劃、策略分析的工作，如科學研究、工程設計或企業管理。' },
-            'INTP': { name: '邏輯學家', description: 'INTP 被稱為「邏輯學家」，是最具哲學思維與創新精神的人格類型。他們對知識的追求永無止境，喜歡探索宇宙萬物背後的運作原理。INTP 擁有極強的分析能力，能夠看穿表象直達事物的本質，這使他們成為出色的問題解決者。然而，他們時常沉浸在自己的思想世界中，可能會忽略現實生活中的瑣事。INTP 珍視獨處的時光，因為那是他們思考與創造的最佳時機。在人際關係中，他們可能顯得有些笨拙，不擅長表達情感，但對於真正理解他們的人，他們會展現出深厚的忠誠。INTP 討厭規則與傳統的束縛，更喜歡以開放的心態探索各種可能性。他們適合從事研究、程式設計、哲學或任何需要創新思維的領域。' },
-            'ENTJ': { name: '指揮官', description: 'ENTJ 被稱為「指揮官」，天生具備領導才能與強大的執行力。他們擁有清晰的願景與堅定的決心，能夠帶領團隊克服重重困難達成目標。ENTJ 非常重視效率，討厭浪費時間在無意義的事情上，總是直奔主題。他們具有敏銳的商業頭腦，善於發現機會並快速採取行動。在領導團隊時，ENTJ 會設定明確的目標與標準，並期待每個人都能全力以赴。他們直言不諱，有話直說的風格可能會讓某些人感到不適，但這種坦率也贏得了許多人的尊重。ENTJ 不害怕挑戰與衝突，反而將其視為成長的機會。然而，他們有時可能過於專注於目標而忽略了他人的感受。ENTJ 在商業管理、創業、法律或政治領域通常能有出色的表現。' },
-            'ENTP': { name: '辯論家', description: 'ENTP 被稱為「辯論家」，是最具創意與口才的人格類型之一。他們思維敏捷，喜歡挑戰既有的觀念與規則，總是能從不同的角度看待問題。ENTP 熱愛智識上的交鋒，享受辯論帶來的刺激感，有時甚至會為了辯論而辯論。他們充滿好奇心，對新事物總是充滿熱情，但可能因此而缺乏持續性，容易對已經開始的計畫失去興趣。ENTP 不喜歡被規則束縛，更傾向於打破常規，尋找創新的解決方案。他們在社交場合中魅力十足，能夠輕鬆與各種人建立連結，但深層的情感交流對他們來說可能是一個挑戰。ENTP 需要學習傾聽他人的想法，而不只是急於表達自己的觀點。他們適合從事創業、行銷、法律或任何需要創新與說服力的工作。' },
-            'INFJ': { name: '提倡者', description: 'INFJ 被稱為「提倡者」，是十六型人格中最稀有的類型之一。他們擁有深刻的洞察力與強烈的理想主義，總是希望能夠讓世界變得更美好。INFJ 具有獨特的能力，能夠理解他人內心深處的情感與動機，這使他們成為出色的傾聽者與輔導者。他們追求有意義的人際關係，不滿足於膚淺的社交，而是渴望真正深入的心靈交流。INFJ 有著豐富的內心世界，時常沉浸在自己的思想與幻想中。他們對自己的價值觀非常堅持，一旦認定某件事是正確的，就會全力以赴去實現。然而，INFJ 可能會因為過於在意他人的需求而忽略自己的感受，導致精力耗竭。他們適合從事諮商、寫作、教育或任何能夠幫助他人的工作。' },
-            'INFP': { name: '調停者', description: 'INFP 被稱為「調停者」，是最具詩意與理想色彩的人格類型。他們擁有豐富的想像力與深刻的情感，對藝術、文學與人文領域有著天然的親和力。INFP 追求真實與真誠，討厭虛偽與表面功夫，總是希望能夠活出最真實的自己。他們有著強烈的價值觀，會為自己相信的理念奮戰到底。在人際關係中，INFP 渴望深層的情感連結，重視理解與被理解。他們可能顯得有些內向與害羞，但內心其實充滿熱情與創意。INFP 時常陷入自我懷疑，對自己要求過高，需要學習接納自己的不完美。他們對批評非常敏感，容易將他人的評論往心裡去。INFP 適合從事寫作、藝術創作、心理諮商或任何能讓他們表達內心世界的工作。' },
-            'ENFJ': { name: '主人公', description: 'ENFJ 被稱為「主人公」，天生具備領袖魅力與強大的感染力。他們熱情洋溢，真誠關心他人的成長與幸福，總是願意伸出援手幫助需要幫助的人。ENFJ 擁有出色的人際交往能力，能夠輕鬆建立深厚的人際關係，並在團體中扮演凝聚人心的角色。他們對他人的情緒非常敏感，能夠察覺到細微的情感變化。ENFJ 有著強烈的使命感，希望能夠對社會產生正面的影響，常常投身於公益活動或社會運動。然而，他們有時可能過於在意他人的評價，或者為了維持和諧而壓抑自己的真實感受。ENFJ 需要學習設立健康的界線，避免為他人付出過多而忽略自己的需求。他們適合從事教育、人力資源、社會工作或任何需要領導與激勵他人的職位。' },
-            'ENFP': { name: '競選者', description: 'ENFP 被稱為「競選者」，是最具熱情與創造力的人格類型之一。他們對生活充滿好奇心，總是在尋找新的體驗與冒險。ENFP 擁有感染他人的正面能量，能夠輕鬆帶動周圍的氣氛，讓人們感到快樂與希望。他們具有豐富的想像力，喜歡探索各種可能性，討厭被規則與傳統所限制。ENFP 真誠地關心他人，善於傾聽並給予支持，是朋友眼中值得信賴的夥伴。然而，他們可能因為興趣太廣泛而難以專注在單一目標上，容易半途而廢。ENFP 討厭例行公事與重複性的工作，需要不斷的刺激與變化來保持動力。他們有時可能過於理想化，對現實的殘酷面缺乏準備。ENFP 適合從事創意產業、公關、心理諮詢或任何能讓他們發揮創意與人際能力的工作。' },
-            'ISTJ': { name: '物流師', description: 'ISTJ 被稱為「物流師」，是最可靠與負責任的人格類型之一。他們重視傳統、規則與秩序，相信通過努力工作與遵守規範可以達成目標。ISTJ 做事一絲不苟，注重細節，總是能夠準時完成任務。他們對承諾極為認真，一旦答應的事情就會全力以赴去實現。ISTJ 喜歡有條理的生活，討厭混亂與不確定性，會花時間規劃每一個步驟。在工作中，他們是可靠的執行者，能夠獨立完成複雜的任務。然而，ISTJ 可能顯得過於嚴肅或固執，不太願意嘗試新的方法。他們在情感表達上可能較為含蓄，不擅長處理情緒化的場面。ISTJ 需要學習更加開放地接受變化，以及在必要時表達自己的感受。他們適合從事會計、法律、工程或任何需要精確與可靠性的工作。' },
-            'ISFJ': { name: '守衛者', description: 'ISFJ 被稱為「守衛者」，是最具奉獻精神與溫暖特質的人格類型。他們默默付出，不求回報，總是將他人的需求放在自己之前。ISFJ 有著極強的責任感，對家庭、朋友與工作都投入大量的心力。他們記性很好，會記得每一個重要的細節與日期，用心維護與他人的關係。ISFJ 喜歡和諧的環境，會盡力避免衝突，有時甚至會犧牲自己的立場來維持和平。他們對傳統與習俗有著深厚的情感，珍視那些經過時間考驗的價值觀。然而，ISFJ 可能過於在意他人的評價，害怕讓人失望。他們需要學習說「不」，並且照顧好自己的需求。ISFJ 的付出常常被視為理所當然，但他們真的需要被感謝與認可。他們適合從事護理、教育、行政或任何需要細心與關懷的工作。' },
-            'ESTJ': { name: '總經理', description: 'ESTJ 被稱為「總經理」，是最具組織能力與執行力的人格類型。他們相信規則與秩序，擅長建立系統並確保每個人都遵守規範。ESTJ 天生具備領導才能，能夠清楚地傳達指令並督促團隊達成目標。他們務實且直接，不喜歡繞圈子，總是以效率為優先考量。ESTJ 對工作極為認真，以身作則，期待他人也能達到同樣的標準。他們重視傳統與社會規範，認為這些是維持社會運作的重要基石。然而，ESTJ 可能顯得過於強勢或專制，不太願意傾聽不同的意見。他們在處理情感問題時可能顯得笨拙，更習慣用邏輯來解決一切。ESTJ 需要學習更加尊重他人的感受與觀點，培養同理心。他們適合從事管理、軍事、法律執行或任何需要組織與領導能力的職位。' },
-            'ESFJ': { name: '執政官', description: 'ESFJ 被稱為「執政官」，是最具社交能力與關懷特質的人格類型之一。他們天生喜歡照顧他人，總是能夠察覺到周圍人的需求並主動提供幫助。ESFJ 重視和諧的人際關係，會努力維護團體的凝聚力與向心力。他們喜歡社交活動，擅長組織聚會並確保每個人都感到受歡迎。ESFJ 對傳統與禮儀非常重視，認為這些是維繫社會連結的重要紐帶。他們忠誠可靠，是朋友和家人可以依賴的後盾。然而，ESFJ 可能過於在意他人的評價，容易因為批評而受傷。他們有時會為了取悅他人而忽略自己的需求，或者過度干涉他人的生活。ESFJ 需要學習接受並非所有人都會喜歡自己這個事實，並且尊重他人的界限。他們適合從事醫療照護、教育、活動企劃或任何需要人際互動的工作。' },
-            'ISTP': { name: '鑑賞家', description: 'ISTP 被稱為「鑑賞家」，是最具動手能力與冷靜特質的人格類型。他們對機械、工具與技術有著天生的興趣，喜歡親手拆解並理解事物的運作原理。ISTP 擅長在壓力下保持冷靜，能夠快速分析問題並找出解決方案。他們喜歡獨立工作，不太需要他人的指導或監督，更偏好以自己的方式完成任務。ISTP 活在當下，享受即時的感官體驗，對長遠規劃較不感興趣。他們討厭被規則束縛，喜歡保持靈活與自由。在人際關係中，ISTP 可能顯得冷漠或疏離，因為他們不擅長表達情感。然而，他們對真正在乎的人其實非常忠誠。ISTP 可能會冒不必要的風險來追求刺激，需要學習考慮行動的後果。他們適合從事工程、技術維修、急救人員或任何需要動手解決問題的工作。' },
-            'ISFP': { name: '探險家', description: 'ISFP 被稱為「探險家」，是最具藝術氣質與溫和特性的人格類型。他們對美有著敏銳的感受力，能夠在日常生活中發現他人忽略的美好事物。ISFP 活在當下，享受每一個瞬間，不太擔心未來或糾結過去。他們具有強烈的個人價值觀，但不會將其強加於他人，更傾向於用行動而非言語來表達自己。ISFP 喜歡和諧的環境，會盡量避免衝突與對抗。他們對他人的感受非常敏感，能夠提供溫暖的支持與陪伴。然而，ISFP 可能過於迴避衝突，即使在需要表達立場的時候也選擇沉默。他們有時會因為過於在意他人的感受而壓抑自己的需求。ISFP 需要學習更加勇敢地表達自己，並接受衝突有時是必要的。他們適合從事藝術創作、設計、音樂或任何能讓他們發揮創意的工作。' },
-            'ESTP': { name: '企業家', description: 'ESTP 被稱為「企業家」，是最具行動力與冒險精神的人格類型。他們活力充沛，喜歡刺激與挑戰，總是準備好投入下一個冒險。ESTP 擅長察言觀色，能夠快速讀懂社交場合中的氛圍並做出適當的回應。他們思維敏捷，善於臨場應變，是危機處理的高手。ESTP 活在當下，享受即時的樂趣，對長遠的規劃較不感興趣。他們討厭被理論與抽象概念束縛，更喜歡動手實踐。ESTP 具有天生的說服力，能夠輕鬆影響他人的決定。然而，他們可能過於衝動，在行動前缺乏足夠的思考。他們有時會忽略他人的感受，顯得過於直接或冒犯。ESTP 需要學習考慮行動的長遠後果，以及更加關注他人的情感需求。他們適合從事銷售、創業、運動員或任何需要快速反應與人際互動的工作。' },
-            'ESFP': { name: '表演者', description: 'ESFP 被稱為「表演者」，是最具表演天分與感染力的人格類型。他們熱愛生活，總是能夠找到樂趣並與他人分享快樂。ESFP 天生具有表演的才華，喜歡成為眾人關注的焦點，能夠輕鬆帶動氣氛。他們對感官體驗非常敏銳，喜歡美食、音樂、時尚與一切美好的事物。ESFP 慷慨大方，喜歡與朋友分享一切，是聚會中不可或缺的靈魂人物。他們活在當下，不太擔心未來，相信事情總會順利解決。然而，ESFP 可能過於追求即時的滿足，忽略了長遠的規劃與責任。他們對批評非常敏感，容易因為負面評價而受傷。ESFP 需要學習延遲滿足，以及面對生活中不那麼愉快的現實。他們適合從事表演藝術、娛樂產業、銷售或任何需要與人互動並帶來歡樂的工作。' }
-        };
+她看著小明顫抖的背影，胸口某個地方忽然變得很緊。她說不清楚那是什麼感覺，只知道不管眼前發生多奇怪的事，她都不想跑掉，不想留下小明一個人。
 
-        // 標籤切換功能
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.type-group').forEach(g => g.classList.remove('active'));
+小花深吸一口氣，小步走近，閉上眼睛，也跟著抱了上去。她不知道自己為什麼這樣做，只覺得此刻不該讓小明一個人撐著。小明愣了一下，隨即沒有說話，三個人就這樣靜靜地抱在一起。
 
-                this.classList.add('active');
-                document.getElementById(this.dataset.group).classList.add('active');
-            });
-        });
+就在這一刻，遠處的樹林裡傳來一聲截然不同的嚎叫——更尖銳、更憤怒，帶著一股令人寒毛直豎的殺氣。狼人父親猛地抬頭，黃色的眼睛瞬間充滿警戒，低聲發出一陣嗚嗚的警告。那個聲音，不像悲傷，更像是——危險正在靠近。
 
-        // 選項點擊效果
-        document.querySelectorAll('.option').forEach(option => {
-            option.addEventListener('click', function() {
-                const questionDiv = this.closest('.question');
-                questionDiv.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
-                this.classList.add('selected');
-                this.querySelector('input').checked = true;
-            });
-        });
+#出現了反派角色，邪惡虎鬼，先形容這個角色的背景
 
-        // 表單提交
-        document.getElementById('quizForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+黑暗中踏出一頭巨大的虎鬼。牠身形如猛虎，卻有著人的站姿，全身布滿燒焦般的黑色紋路，獨眼中燃著血紅色的火焰。這就是惡名昭彰的邪惡虎鬼——森林古老的詛咒之靈，以嫉妒與怨恨為食，曾在百年前被狼族封印於山的深處。六年前，封印破裂，牠重回人間，帶著滔天的報復之心。
 
-            const formData = new FormData(this);
-            const answers = {};
+#反派角色殺了小明的阿姨：狼人型態的阿姨
 
-            for (let [key, value] of formData.entries()) {
-                answers[key] = value;
-            }
+狼人父親發出悲鳴，以爪子在泥地上刻出幾個字：「你阿姨……已經不在了。」小明的身體一僵。就在他們抱在一起的那片樹林不遠處，一叢枯草之間，靜靜躺著一頭灰白色的母狼——那是小明的阿姨。她的身上有深深的爪痕，眼神已然空洞。六年來，她一直守護在這片林子邊緣，守護著村子裡長大的兒子，直到今晚，虎鬼找到了她。
 
-            // 檢查是否所有問題都已回答
-            if (Object.keys(answers).length < 10) {
-                alert('請回答所有問題！');
-                return;
-            }
+#說明小明父母為什麼會變成狼人
 
-            // 計算各維度分數
-            let E = 0, I = 0, S = 0, N = 0, T = 0, F = 0, J = 0, P = 0;
+狼人父用爪子顫抖著刻下真相：六年前，他們為了保護村子，主動接下了封印虎鬼的古老儀式。儀式要求施法者以自身血脈為代價，兩人因此被詛咒化為狼人之身，永遠無法再以人的面貌回到家中。他們把三歲的小明託付給阿姨，便悄悄消失在森林裡，從此在黑暗中遠遠守望著兒子長大，不敢現身，也不敢讓他知道真相。
 
-            // E/I 維度 (問題 1, 2)
-            if (answers.q1 === 'E') E++; else I++;
-            if (answers.q2 === 'E') E++; else I++;
+#邪惡虎鬼為什麼會攻擊狼人夫妻，並殺死他
 
-            // S/N 維度 (問題 3, 4)
-            if (answers.q3 === 'S') S++; else N++;
-            if (answers.q4 === 'S') S++; else N++;
+虎鬼獰笑著走近。當年正是這對狼人夫妻親手將牠封印，讓牠在黑暗中受了六年的煎熬與屈辱。如今封印一斷，牠第一件事便是找到他們復仇。母狼拚死抵擋，為父狼爭取了逃脫的時間，卻也因此身受致命重傷，在林中悄然倒下。虎鬼不滿足，循著父狼的氣味一路追來，要將這對夫妻斬草除根，更要毀掉他們唯一的骨肉——小明。
 
-            // T/F 維度 (問題 5, 6, 7)
-            if (answers.q5 === 'T') T++; else F++;
-            if (answers.q6 === 'T') T++; else F++;
-            if (answers.q7 === 'T') T++; else F++;
+#邪惡虎鬼與狼人父、小明、小花的決戰
 
-            // J/P 維度 (問題 8, 9, 10)
-            if (answers.q8 === 'J') J++; else P++;
-            if (answers.q9 === 'J') J++; else P++;
-            if (answers.q10 === 'J') J++; else P++;
+虎鬼撲向小明，父狼猛地擋在前方，兩頭巨獸在林間激烈纏鬥，枯枝四飛、泥土翻騰。小花從地上撿起一根尖銳的斷枝，毫不猶豫地衝上去刺向虎鬼的後腿。虎鬼一個踉蹌，小明趁機想起口袋裡那顆幸運星——星紙展開，竟透出一道金光。阿姨曾說那是他父母留下的護身符。小明高舉護身符，金光瞬間爆發，將虎鬼籠罩其中，牠發出一聲撕裂的慘嚎，黑色的身影在光芒中逐漸消散。
 
-            // 決定類型
-            const type = (E >= I ? 'E' : 'I') +
-                        (S >= N ? 'S' : 'N') +
-                        (T >= F ? 'T' : 'F') +
-                        (J >= P ? 'J' : 'P');
+#小明方勝利後但狼人父也身負重傷
 
-            // 顯示結果
-            showResult(type, {
-                EI: { E: E, I: I },
-                SN: { S: S, N: N },
-                TF: { T: T, F: F },
-                JP: { J: J, P: P }
-            });
-        });
+金光散去，森林重新歸於寂靜。虎鬼消失了，只留下一片焦黑的泥土。小明跑向父親，卻發現父狼已緩緩倒在地上，身上的傷口觸目驚心。與虎鬼纏鬥時，父狼以血肉之軀擋下了最致命的那幾擊。牠的呼吸越來越淺，黃色的眼睛卻依然溫柔地望著小明。小花跪在一旁，眼眶紅了，緊咬著嘴唇不讓自己哭出聲。
 
-        function showResult(type, scores) {
-            const data = personalityData[type];
+#狼人父與小明道別，小明也跟小花在一起
 
-            document.getElementById('resultType').textContent = type;
-            document.getElementById('resultName').textContent = data.name;
-            document.getElementById('resultDescription').textContent = data.description;
+父狼抬起最後一絲力氣，用爪子輕輕碰了碰小明的臉，又指了指小花，在泥地上刻下最後幾個字：「好好的。照顧彼此。」小明哭著點頭，緊握住父親的爪子，直到那雙手慢慢失去了溫度。父狼的身形在晨光中化作點點白光，飄散於林間，與遠處母狼的氣息悄悄交融在一起。小明站起身，轉頭看向小花。她的眼眶還是紅的，卻對他露出一個輕輕的微笑。小明沒有說話，只是牽起了她的手，兩人一起走出了森林。
 
-            // 顯示維度分數
-            const dimensionScores = document.getElementById('dimensionScores');
-            dimensionScores.innerHTML = `
-                <div class="dimension">
-                    <div class="dimension-label">
-                        <span>內向 (I)</span>
-                        <span>外向 (E)</span>
-                    </div>
-                    <div class="dimension-bar">
-                        <div class="dimension-fill" style="width: ${scores.EI.E / 2 * 100}%; margin-left: ${scores.EI.I / 2 * 100}%;"></div>
-                    </div>
-                </div>
-                <div class="dimension">
-                    <div class="dimension-label">
-                        <span>實感 (S)</span>
-                        <span>直覺 (N)</span>
-                    </div>
-                    <div class="dimension-bar">
-                        <div class="dimension-fill" style="width: ${scores.SN.N / 2 * 100}%; margin-left: ${scores.SN.S / 2 * 100}%;"></div>
-                    </div>
-                </div>
-                <div class="dimension">
-                    <div class="dimension-label">
-                        <span>思考 (T)</span>
-                        <span>情感 (F)</span>
-                    </div>
-                    <div class="dimension-bar">
-                        <div class="dimension-fill" style="width: ${scores.TF.F / 3 * 100}%; margin-left: ${scores.TF.T / 3 * 100}%;"></div>
-                    </div>
-                </div>
-                <div class="dimension">
-                    <div class="dimension-label">
-                        <span>判斷 (J)</span>
-                        <span>感知 (P)</span>
-                    </div>
-                    <div class="dimension-bar">
-                        <div class="dimension-fill" style="width: ${scores.JP.P / 3 * 100}%; margin-left: ${scores.JP.J / 3 * 100}%;"></div>
-                    </div>
-                </div>
-            `;
+#把結局再最延伸，小明與小花回到村莊裡真正的變成一對戀人約會，阿姨跟村民看了覺得很欣慰
 
-            const resultSection = document.getElementById('resultSection');
-            resultSection.classList.add('show');
-            resultSection.scrollIntoView({ behavior: 'smooth' });
-        }
+那天下午，小明與小花手牽手走回村莊的時候，剛好是黃昏，整條街都染上了橘紅色的光。阿姨站在門口等著，一眼就看見兩人緊握的手，愣了一下，隨即笑著別過頭去，偷偷擦了擦眼角。隔壁的老伯探出頭來，樂呵呵地嚷道：「哎，這兩個孩子終於開竅了！」引得附近幾個鄰居都笑了起來。小花的臉紅得像天邊的雲，小明卻大方地牽緊了她的手，咧嘴笑道：「以後要麻煩大家多照顧她。」村子裡響起一片溫柔的笑聲，風輕輕吹過，帶走了森林裡所有的悲傷，只留下這個尋常又珍貴的傍晚。
 
-        function restartQuiz() {
-            document.getElementById('quizForm').reset();
-            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
-            document.getElementById('resultSection').classList.remove('show');
-            document.querySelector('.quiz-section').scrollIntoView({ behavior: 'smooth' });
-        }
-    </script>
+---
+
+#選項3：小花其實也不是普通人，她從小就知道小明父母的事
+
+回到家後，小花盯著那顆幸運星看了很久，終於輕聲開口：「這個護身符……是我阿嬤親手折的。」小明愣住了。小花緩緩說，她的家族世代是守護這片森林結界的人，阿嬤早在小明出生前就認識他的父母。那年封印儀式之前，阿嬤將護身符交給小明的阿姨，叮囑她等孩子長大再傳給他。小花從三歲起就知道這一切，那天跟著小明進森林，從來就不是巧合。小明沉默了很久，望著她問：「所以妳一直都在保護我？」小花低下頭，耳根泛紅：「只是……不想讓你一個人。」
+
+#選項3：虎鬼才是真正的受害者，小明的祖先才是說謊的人
+
+小花從床底搬出阿嬤留下的舊木箱，裡頭壓著一本封面破損的紀錄冊。兩人湊在燭光下翻閱，越看越沉默。百年前，虎鬼並非詛咒之靈，而是守護這片森林的古老靈獸，與村莊世代共存。是小明的祖先貪圖森林深處的靈氣，偽造了「虎鬼作亂」的說法，借用結界師家族之力將牠強行封印。小明盯著那幾行字，手微微顫抖。他用護身符消滅的，是一個被囚禁了百年、只想回家的生命。小花輕輕握住他的手：「你不知道這些，這不是你的錯。」小明閉上眼睛，久久說不出話。
+
+---
+
+#延續選項3的故事結尾，加上新角色，開啟下階段的故事
+
+那個晚上之後，小明沉默了好幾天。倒是小花的好友**美美**第一個察覺到不對勁。美美是個停不下來的人，嘴裡永遠備著三個笑話，走進任何一個房間都像把太陽帶進來。她拖著小花來找小明，嚷嚷著說要慶祝「你們終於在一起」，卻在看見小明的眼神後，把後半句話吞了回去。足球隊的學長**祐祐**也在同一天出現——他來借小明的筆記，卻留下來坐了兩個小時，講了一堆有的沒的，其實只是不想讓小明一個人待著。角落裡還有一個安靜的身影：**岑岑**，抱著一捆毛線，低著頭，默默織著什麼。
+
+美美和小花從小學三年級就坐同桌，是那種吵架隔天還是手牽手上學的朋友。她對小花的心思瞭若指掌，一眼就看穿小花暗戀小明多年，卻從來沒有拆穿，只是默默在每次小花猶豫的時候往前推一把。如今兩人終於在一起，美美比任何人都高興，但她也是第一個發現小明笑容不對勁的人。祐祐則是透過足球認識小明的，兩人雖然年紀差了幾歲，卻一拍即合。祐祐習慣用說話填滿沉默，而小明正好是那種任何話題都接得住的人，讓祐祐覺得跟他說話特別輕鬆。
+
+岑岑是最晚出現在這個圈子裡的人。她住在村子邊緣一棟安靜的小屋，平時話不多，與鄰居打招呼也只是點頭。但她的手很巧——牆上掛著她自己繡的山、畫的森林，色彩深沉而細膩，像是把什麼說不出口的情緒全藏進了線與顏料裡。她認識小花是因為某天小花在她門口發呆，岑岑出來問了一句「要進來喝水嗎」，兩人就這樣開始說話。對小明，岑岑沒有主動搭過話，但她注意過他很多次——那個走路總是昂著頭的男孩，這陣子走路開始看著地板了。
+
+美美第一個說出來。「他笑的時候眼睛沒有在笑。」她對小花說，語氣少了平時的玩笑。祐祐注意到小明練球時開始分心，傳球傳到一半會突然停下來，盯著某個地方發愣。岑岑什麼都沒說，只是有一天把一幅畫悄悄放在小明的桌上——一片森林，深處有一道光，光裡有一個模糊的身影，像是在等什麼，又像是在道別。小明拿著那幅畫看了很久，然後把臉埋進手心，肩膀微微顫抖。小花在門口看見這一幕，沒有走進去，只是靠著牆，閉上眼睛，心裡知道——這件事，沒有那麼容易過去。
+
+---
+
+#小明開始與德叔接觸
+
+那天傍晚，德叔出現在村口的老榕樹下。
+
+他穿著一貫的深藍對襟布衣，白髮梳得整整齊齊，遠遠看見小明就抬起手，慢慢揮了揮，像個等待已久的老朋友。
+
+「小明啊。」他的聲音低緩，帶著歲月磨出的沉穩，「最近好嗎？聽說你進了一趟森林，可嚇壞了不少人。」
+
+小明停下腳步。他不熟悉這位老人，卻說不清楚為什麼，對方的笑容讓他覺得哪裡不對——那種感覺很輕，像一根細針掠過皮膚，轉瞬就不見了。
+
+「我還好。」他說。
+
+德叔點點頭，走近了幾步，從袖口取出一小包核桃，放進小明手裡，笑道：「你父母的事，老伯多少知道一些。那是很早以前的事了，很複雜——不是幾句話說得清的。」他停頓了一下，眯起眼睛，「有些事啊，不知道比知道好，孩子。」
+
+小明握著核桃，沒有說話，只是看著那隻遞來核桃的手——左手小指上，有一道橫過去的陳年舊疤。
+
+德叔似乎察覺到他的視線，不動聲色地把手收了回去，依然掛著那個慈祥的淺笑。
+
+那幾天，德叔又來了兩次。
+
+第一次是來找阿姨，說是問候老鄰居，坐下來喝了一杯茶，說了許多平常話，臨走前隨口提了一句：「小孩子嘛，有些事想太多對身體不好，妳說是不是？」阿姨點頭，沒有多想。
+
+第二次，他帶了一籃子糕點，說是廟會剩下的，特地留一份給小明。小明不在，德叔就在門口與美美說了一會兒話，問的都是日常，卻每一句都繞回那天森林的事。美美事後對小花說：「那個老伯看起來很好啊，笑咪咪的。但他問了很多——你們進森林那天，到底遇見了什麼？」
+
+小花沉默了一下。她想起阿嬤木箱裡那幾行字，想起德叔的名字曾出現在其中一頁的角落，字跡細小，像是被誰刻意寫得不顯眼。
+
+「你說的是德叔？」她問。
+
+「對啊，他說他認識你們很久了。」美美歪了歪頭，「妳認識他嗎？」
+
+小花沒有回答，低下頭，手指悄悄收緊。她知道那個名字意味著什麼，卻還不確定該如何開口——對小明說，還是暫時一個人扛著。
+
+---
+
+#謊言的絞索，霧中影的降臨
+
+德叔開始在村民中低聲說，小明最近「狀態不太對」，可能是進了森林受了什麼驚嚇。話不多，卻傳得快。美美的阿嬤第一個叫美美少去找小明，祐祐的爸爸在飯桌上提了一句「那個孩子有點奇怪」。小明一個人走在村子裡，感覺每個笑容背後都有什麼東西在悄悄移位。那天傍晚，他在河邊蹲著，河面忽然起了霧——帶著銀色光澤的霧，草葉的顏色開始一點一點褪去，沿著岸邊蔓延過來。小明沒有動，只是低聲問：「是你嗎？」霧裡沒有回答，只有一雙銀白色的眼睛，靜靜地、不眨地，望著他。
+
+小明沒有逃。他不知道為什麼，腿就是不動。
+
+霧越來越近，那雙銀白色的眼睛在霧裡緩緩移動，像水底的一盞燈。小明聽見一個聲音——不是從空氣裡傳來的，更像是從很深很深的地方，繞過耳朵，直接進到腦子裡：「你以為你做了一件壞事。」
+
+小明握緊雙拳。「我用護身符消滅了一個無辜的生命。」
+
+「不，」那個聲音帶著古怪的回聲，像在空洞的山谷裡說話，「你做了你以為是對的事。問題不在你。問題在於，有人讓你用了一個沾滿謊言的武器，卻沒有告訴你真相。」
+
+那一夜，小明回到家，沒有吃飯，坐在房間裡盯著牆壁。阿姨敲了兩次門，他都說沒事。她不知道，門縫下面滑進來一片乾枯的葉子，葉脈上有細細的銀色紋路，那是霧中影留下的——牠不說謊，只是選了另一種說話的方式。
+
+接下來三天，美美沒有來。
+
+祐祐沒有來。
+
+只有小花每天傍晚都繞到後巷，從矮牆邊把一張摺好的紙片遞過來，上面寫著：「我在。」三個字，不多，但小明每次看見都把那張紙壓到枕頭底下。他不知道小花正在承受的是什麼。
+
+德叔在村民大會上發言，說最近有「不潔的靈氣」在森林邊緣遊蕩，建議大家晚上不要讓孩子出門，並且「暫時」讓小明少與人來往，以免「那股氣」跟著他傳給別人。沒有人懷疑，因為他說話的時候眼裡有真誠的憂慮，語氣像一個老人在為全村操碎了心。
+
+小花聽見這段話是在第四天，她站在人群後頭，臉色白了一下，隨即轉身回家，翻出了那個木箱。
+
+這一次，她翻到了最底層。
+
+那裡壓著一張被折了很多次的紙，上面的字是她阿嬤的筆跡，顏色已經發黃，但每個字都寫得很用力，像是恨不得把它們刻進去：「德仁知道一切。他是第一個看見帳冊的人，也是第一個選擇燒掉它的人。若有一天村子裡有人開始追問，他會用『保護』的名義把那個人困住。不要相信他說的任何一句『為你好』。」
+
+小花把那張紙攥在手裡，走出了家門。
+
+她先去找了美美。美美一看見她的臉色就知道是正事，把嘴裡的玩笑話咽了回去，聽她說完，沉默了三秒，說：「那我們現在怎麼辦？」小花說：「去找祐祐。」
+
+祐祐打球回來，汗還沒擦乾，聽完就把毛巾往桌上一扔：「行，告訴我要做什麼。」
+
+那天傍晚，小明在後院坐著，天色開始暗下來。然後院門被推開了，美美、祐祐、小花三個人一起走進來。小明抬頭，愣了一下。美美率先開口，聲音比平時少了三分玩笑：「喂，你以為我們被那個老頭幾句話就嚇跑了？」
+
+小花把阿嬤的那張紙放到他面前，說：「看完再說話。」
+
+小明低頭讀，讀到一半手開始顫。讀完，他久久沒有動。
+
+就在這時，霧又來了——但這一次不是在河邊，而是在院子裡，從角落漫起，帶著銀色的光，把四個人的影子拉得很長。所有人同時屏住了呼吸。霧中影從霧裡緩緩成形，銀白色的眼睛掃過每個人，最後落在小明臉上。牠開口，聲音繞了一圈才到達：「你想知道他還藏了什麼嗎？」
+
+沒有人說話。
+
+小明站起來，看著那雙眼睛，說：「帶我去。」
+
+五個人跟著霧，沿著村子走，走到廟後一扇從來不對外開放的小屋前停下。門上掛著一把老鎖，但霧中影輕輕飄過去，那把鎖就無聲地開了。
+
+屋子裡很暗。祐祐用手機照亮，光打在牆上一排木格子上——整整齊齊放著帳冊，一本接著一本，每本封面都有年份。小花數了數，最舊的那本，年份是一百零三年前。
+
+小明伸出手，把最舊的那一本抽出來，翻開第一頁。
+
+那是德叔親手寫的記錄，第一行寫著：「今日讀祖父遺物，知真相。決定沉默。此後所有不實之處，由我一人承擔，不得外傳。」
+
+日期，是德叔十二歲那年。
+
+小明把書闔上，轉頭看向門口。德叔就站在那裡。
+
+他不知道什麼時候來的，白髮在黑暗裡格外顯眼，那串木珠握在手心，不再撥動。他看了一眼霧中影，又看了一眼小明，那個維持了一輩子的慈祥淺笑，這一次，終於沒有撐起來。
+
+「你們都看見了。」他的聲音很輕，不像平時的沉穩，更像一個非常疲憊的老人說出了等了很久的話，「那就說吧。我聽著。」
+
+小明沒有憤怒，也沒有哭，只是把帳冊放回木格子，走到德叔面前，靜靜地問了一句：「你這五十五年，有沒有一天，覺得後悔過？」
+
+德叔閉上眼睛。
+
+沉默了很久，他說：「每一天。」
+
+霧中影在燈光與黑暗的邊界靜靜懸著，那雙銀白色的眼睛，第一次不再是追問，而是像聽見了一個等待很久的回答，慢慢低了下去。
+</script>
+
+<script>
+  // 取得 Markdown 內容並渲染
+  const raw = document.getElementById('md-source').textContent;
+
+  // 將 #標題 行（以中文開頭的 h1）轉成帶有樣式的區塊標題
+  const processed = raw.replace(/^#(?!#)(.+)$/gm, (_, title) => {
+    return `# ${title.trim()}`;
+  });
+
+  marked.setOptions({ breaks: true });
+  document.getElementById('story').innerHTML = marked.parse(processed);
+</script>
+
 </body>
 </html>

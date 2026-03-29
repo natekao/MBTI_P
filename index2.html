@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI 性格類型介紹與測驗</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', '微軟正黑體', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* 性格類型區塊 */
+        .personality-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .personality-section h2 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        .personality-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .personality-card {
+            background: linear-gradient(145deg, #f5f7fa 0%, #e4e8eb 100%);
+            border-radius: 15px;
+            padding: 25px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .personality-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .personality-card h3 {
+            color: #764ba2;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .personality-card .type-code {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .personality-card p {
+            line-height: 1.8;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        /* 類型分類 */
+        .type-category {
+            margin-bottom: 30px;
+        }
+
+        .type-category h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        /* 測驗區塊 */
+        .quiz-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .quiz-section h2 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        .quiz-intro {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #666;
+        }
+
+        .question {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .question h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .question-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+        }
+
+        .option input {
+            display: none;
+        }
+
+        .option-marker {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .option.selected .option-marker {
+            border-color: #667eea;
+            background: #667eea;
+        }
+
+        .option.selected .option-marker::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 30px auto 0;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 結果區塊 */
+        .result-section {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-type {
+            font-size: 4rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+
+        .result-name {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .result-description {
+            text-align: left;
+            line-height: 2;
+            color: #555;
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        .dimension-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .dimension {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .dimension-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .dimension-bar {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .dimension-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        .restart-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .restart-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .personality-section, .quiz-section {
+                padding: 20px;
+            }
+
+            .personality-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-type {
+                font-size: 3rem;
+            }
+        }
+
+        /* 導航標籤 */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 10px 25px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .type-group {
+            display: none;
+        }
+
+        .type-group.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MBTI 十六型人格</h1>
+            <p>探索你的性格類型，了解真實的自己</p>
+        </header>
+
+        <!-- 性格介紹區塊 -->
+        <section class="personality-section">
+            <h2>十六種性格類型介紹</h2>
+
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-group="analysts">分析家 (NT)</button>
+                <button class="nav-tab" data-group="diplomats">外交家 (NF)</button>
+                <button class="nav-tab" data-group="sentinels">守護者 (SJ)</button>
+                <button class="nav-tab" data-group="explorers">探險家 (SP)</button>
+            </div>
+
+            <!-- 分析家 NT -->
+            <div class="type-group active" id="analysts">
+                <div class="personality-grid">
+                    <div class="personality-card">
+                        <h3><span class="type-code">INTJ</span> 建築師</h3>
+                        <p>INTJ 被稱為「建築師」，是十六型人格中最具戰略思維的類型之一。他們擁有豐富的想像力與堅定的意志力，能夠將宏大的願景轉化為具體可行的計畫。INTJ 天生對知識充滿渴望，喜歡深入研究複雜的理論與系統，並且總是在尋找更有效率的方法來達成目標。他們獨立自主，不需要他人的認可來肯定自己的價值，反而更重視邏輯與理性的判斷。在社交場合中，INTJ 可能顯得較為冷淡或疏離，但這並非冷漠，而是他們習慣將精力投注在更有意義的事物上。他們是完美主義者，對自己和他人都有很高的標準，有時可能因此顯得過於嚴苛。INTJ 適合從事需要長遠規劃、策略分析的工作，如科學研究、工程設計或企業管理。</p>
+                    </div>
+                    <div class="personality-card">
+                        <h3><span class="type-code">INTP</span> 邏輯學家</h3>
+                        <p>INTP 被稱為「邏輯學家」，是最具哲學思維與創新精神的人格類型。他們對知識的追求永無止境，喜歡探索宇宙萬物背後的運作原理。INTP 擁有極強的分析能力，能夠看穿表象直達事物的本質，這使他們成為出色的問題解決者。然而，他們時常沉浸在自己的思想世界中，可能會忽略現實生活中的瑣事。INTP 珍視獨處的時光，因為那是他們思考與創造的最佳時機。在人際關係中，他們可能顯得有些笨拙，不擅長表達情感，但對於真正理解他們的人，他們會展現出深厚的忠誠。INTP 討厭規則與傳統的束縛，更喜歡以開放的心態探索各種可能性。他們適合從事研究、程式設計、哲學或任何需要創新思維的領域。</p>
+                    </div>
+                    <div class="personality-card">
+                        <h3><span class="type-code">ENTJ</span> 指揮官</h3>
+                        <p>ENTJ 被稱為「指揮官」，天生具備領導才能與強大的執行力。他們擁有清晰的願景與堅定的決心，能夠帶領團隊克服重重困難達成目標。ENTJ 非常重視效率，討厭浪費時間在無意義的事情上，總是直奔主題。他們具有敏銳的商業頭腦，善於發現機會並快速採取行動。在領導團隊時，ENTJ 會設定明確的目標與標準，並期待每個人都能全力以赴。他們直言不諱，有話直說的風格可能會讓某些人感到不適，但這種坦率也贏得了許多人的尊重。ENTJ 不害怕挑戰與衝突，反而將其視為成長的機會。然而，他們有時可能過於專注於目標而忽略了他人的感受。ENTJ 在商業管理、創業、法律或政治領域通常能有出色的表現。</p>
+                    </div>
+                    <div class="personality-card">
+                        <h3><span class="type-code">ENTP</span> 辯論家</h3>
+                        <p>ENTP 被稱為「辯論家」，是最具創意與口才的人格類型之一。他們思維敏捷，喜歡挑戰既有的觀念與規則，總是能從不同的角度看待問題。ENTP 熱愛智識上的交鋒，享受辯論帶來的刺激感，有時甚至會為了辯論而辯論。他們充滿好奇心，對新事物總是充滿熱情，但可能因此而缺乏持續性，容易對已經開始的計畫失去興趣。ENTP 不喜歡被規則束縛，更傾向於打破常規，尋找創新的解決方案。他們在社交場合中魅力十足，能夠輕鬆與各種人建立連結，但深層的情感交流對他們來說可能是一個挑戰。ENTP 需要學習傾聽他人的想法，而不只是急於表達自己的觀點。他們適合從事創業、行銷、法律或任何需要創新與說服力的工作。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 外交家 NF -->
+            <div class="type-group" id="diplomats">
+                <div class="personality-grid">
+                    <div class="personality-card">
+                        <h3><span class="type-code">INFJ</span> 提倡者</h3>
+                        <p>INFJ 被稱為「提倡者」，是十六型人格中最稀有的類型之一。他們擁有深刻的洞察力與強烈的理想主義，總是希望能夠讓世界變得更美好。INFJ 具有獨特的能力，能夠理解他人內心深處的情感與動機，這使他們成為出色的傾聽者與輔導者。他們追求有意義的人際關係，不滿足於膚淺的社交，而是渴望真正深入的心靈交流。INFJ 有著豐富的內心世界，時常沉浸在自己的思想與幻想中。他們對自己的價值觀非常堅持，一旦認定某件事是正確的，就會全力以赴去實現。然而，INFJ 可能會因為過於在意他人的需求而忽略自己的感受，導致精力耗竭。他們適合從事諮商、寫作、教育或任何能夠幫助他人的工作。</p>
+                    </div>
+                    <div class="personality-card">
+                        <h3><span class="type-code">INFP</span> 調停者</h3>
+                        <p>INFP 被稱為「調停者」，是最具詩意與理想色彩的人格類型。他們擁有豐富的想像力與深刻的情感，對藝術、文學與人文領域有著天然的親和力。INFP 追求真實與真誠，討厭虛偽與表面功夫，總是希望能夠活出最真實的自己。他們有著強烈的價值觀，會為自己相信的理念奮戰到底。在人際關係中，INFP 渴望深層的情感連結，重視理解與被理解。他們可能顯得有些內向與害羞，但內心其實充滿熱情與創意。INFP 時常陷入自我懷疑，對自己要求過高，需要學習接納自己的不完美。他們對批評非常敏感，容易將他人的評論往心裡去。INFP 適合從事寫作、藝術創作、心理諮商或任何能讓他們表達內心世界的工作。</p>
+                    </div>
+                    <div class="personality-card">
+                        <h3><span class="type-code">ENFJ</span> 主人公</h3>
+                        <p>ENFJ 被稱為「主人公」，天生具備領袖魅力與強大的感染力。他們熱情洋溢，真誠關心他人的成長與幸福，總是願意伸出援手幫助需要幫助的人。ENFJ 擁有出色的人際交往能力，能夠輕鬆建立深厚的人際關係，並在團體中扮演凝聚人心的角色。他們對他人的情緒非常敏感，能夠察覺到細微的情感變化。ENFJ 有著強烈的使命感，希望能夠對社會產生正面的影響，常常投身於公益活動或社會運動。然而，他們有時可能過於在意他人的評價，或者為了維持和諧而壓抑自己的真實感受。ENFJ 需要學習設立健康的界線，避免為他人付出過多而忽略自己的需求。他們適合從事教育、人力資源、社會工作或任何需要領導與激勵他人的職位。</p>
+                    </div>
+                    <div class="personality-card">
+                        <h3><span class="type-code">ENFP</span> 競選者</h3>
+                        <p>ENFP 被稱為「競選者」，是最具熱情與創造力的人格類型之一。他們對生活充滿好奇心，總是在尋找新的體驗與冒險。ENFP 擁有感染他人的正面能量，能夠輕鬆帶動周圍的氣氛，讓人們感到快樂與希望。他們具有豐富的想像力，喜歡探索各種可能性，討厭被規則與傳統所限制。ENFP 真誠地關心他人，善於傾聽並給予支持，是朋友眼中值得信賴的夥伴。然而，他們可能因為興趣太廣泛而難以專注在單一目標上，容易半途而廢。ENFP 討厭例行公事與重複性的工作，需要不斷的刺激與變化來保持動力。他們有時可能過於理想化，對現實的殘酷面缺乏準備。ENFP 適合從事創意產業、公關、心理諮詢或任何能讓他們發揮創意與人際能力的工作。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 守護者 SJ -->
+            <div class="type-group" id="sentinels">
+                <div class="personality-grid">
+                    <div class="personality-card">
+                        <h3><span class="type-code">ISTJ</span> 物流師</h3>
+                        <p>ISTJ 被稱為「物流師」，是最可靠與負責任的人格類型之一。他們重視傳統、規則與秩序，相信通過努力工作與遵守規範可以達成目標。ISTJ 做事一絲不苟，注重細節，總是能夠準時完成任務。他們對承諾極為認真，一旦答應的事情就會全力以赴去實現。ISTJ 喜歡有條理的生活，討厭混亂與不確定性，會花時間規劃每一個步驟。在工作中，他們是可靠的執行者，能夠獨立完成複雜的任務。然而，ISTJ 可能顯得過於嚴肅或固執，不太願意嘗試新的方法。他們在情感表達上可能較為含蓄，不擅長處理情緒化的場面。ISTJ 需要學習更加開放地接受變化，以及在必要時表達自己的感受。他們適合從事會計、法律、工程或任何需要精確與可靠性的工作。</p>
+                    </div>
+                    <div class="personality-card">
+                        <h3><span class="type-code">ISFJ</span> 守衛者</h3>
+                        <p>ISFJ 被稱為「守衛者」，是最具奉獻精神與溫暖特質的人格類型。他們默默付出，不求回報，總是將他人的需求放在自己之前。ISFJ 有著極強的責任感，對家庭、朋友與工作都投入大量的心力。他們記性很好，會記得每一個重要的細節與日期，用心維護與他人的關係。ISFJ 喜歡和諧的環境，會盡力避免衝突，有時甚至會犧牲自己的立場來維持和平。他們對傳統與習俗有著深厚的情感，珍視那些經過時間考驗的價值觀。然而，ISFJ 可能過於在意他人的評價，害怕讓人失望。他們需要學習說「不」，並且照顧好自己的需求。ISFJ 的付出常常被視為理所當然，但他們真的需要被感謝與認可。他們適合從事護理、教育、行政或任何需要細心與關懷的工作。</p>
+                    </div>
+                    <div class="personality-card">
+                        <h3><span class="type-code">ESTJ</span> 總經理</h3>
+                        <p>ESTJ 被稱為「總經理」，是最具組織能力與執行力的人格類型。他們相信規則與秩序，擅長建立系統並確保每個人都遵守規範。ESTJ 天生具備領導才能，能夠清楚地傳達指令並督促團隊達成目標。他們務實且直接，不喜歡繞圈子，總是以效率為優先考量。ESTJ 對工作極為認真，以身作則，期待他人也能達到同樣的標準。他們重視傳統與社會規範，認為這些是維持社會運作的重要基石。然而，ESTJ 可能顯得過於強勢或專制，不太願意傾聽不同的意見。他們在處理情感問題時可能顯得笨拙，更習慣用邏輯來解決一切。ESTJ 需要學習更加尊重他人的感受與觀點，培養同理心。他們適合從事管理、軍事、法律執行或任何需要組織與領導能力的職位。</p>
+                    </div>
+                    <div class="personality-card">
+                        <h3><span class="type-code">ESFJ</span> 執政官</h3>
+                        <p>ESFJ 被稱為「執政官」，是最具社交能力與關懷特質的人格類型之一。他們天生喜歡照顧他人，總是能夠察覺到周圍人的需求並主動提供幫助。ESFJ 重視和諧的人際關係，會努力維護團體的凝聚力與向心力。他們喜歡社交活動，擅長組織聚會並確保每個人都感到受歡迎。ESFJ 對傳統與禮儀非常重視，認為這些是維繫社會連結的重要紐帶。他們忠誠可靠，是朋友和家人可以依賴的後盾。然而，ESFJ 可能過於在意他人的評價，容易因為批評而受傷。他們有時會為了取悅他人而忽略自己的需求，或者過度干涉他人的生活。ESFJ 需要學習接受並非所有人都會喜歡自己這個事實，並且尊重他人的界限。他們適合從事醫療照護、教育、活動企劃或任何需要人際互動的工作。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 探險家 SP -->
+            <div class="type-group" id="explorers">
+                <div class="personality-grid">
+                    <div class="personality-card">
+                        <h3><span class="type-code">ISTP</span> 鑑賞家</h3>
+                        <p>ISTP 被稱為「鑑賞家」，是最具動手能力與冷靜特質的人格類型。他們對機械、工具與技術有著天生的興趣，喜歡親手拆解並理解事物的運作原理。ISTP 擅長在壓力下保持冷靜，能夠快速分析問題並找出解決方案。他們喜歡獨立工作，不太需要他人的指導或監督，更偏好以自己的方式完成任務。ISTP 活在當下，享受即時的感官體驗，對長遠規劃較不感興趣。他們討厭被規則束縛，喜歡保持靈活與自由。在人際關係中，ISTP 可能顯得冷漠或疏離，因為他們不擅長表達情感。然而，他們對真正在乎的人其實非常忠誠。ISTP 可能會冒不必要的風險來追求刺激，需要學習考慮行動的後果。他們適合從事工程、技術維修、急救人員或任何需要動手解決問題的工作。</p>
+                    </div>
+                    <div class="personality-card">
+                        <h3><span class="type-code">ISFP</span> 探險家</h3>
+                        <p>ISFP 被稱為「探險家」，是最具藝術氣質與溫和特性的人格類型。他們對美有著敏銳的感受力，能夠在日常生活中發現他人忽略的美好事物。ISFP 活在當下，享受每一個瞬間，不太擔心未來或糾結過去。他們具有強烈的個人價值觀，但不會將其強加於他人，更傾向於用行動而非言語來表達自己。ISFP 喜歡和諧的環境，會盡量避免衝突與對抗。他們對他人的感受非常敏感，能夠提供溫暖的支持與陪伴。然而，ISFP 可能過於迴避衝突，即使在需要表達立場的時候也選擇沉默。他們有時會因為過於在意他人的感受而壓抑自己的需求。ISFP 需要學習更加勇敢地表達自己，並接受衝突有時是必要的。他們適合從事藝術創作、設計、音樂或任何能讓他們發揮創意的工作。</p>
+                    </div>
+                    <div class="personality-card">
+                        <h3><span class="type-code">ESTP</span> 企業家</h3>
+                        <p>ESTP 被稱為「企業家」，是最具行動力與冒險精神的人格類型。他們活力充沛，喜歡刺激與挑戰，總是準備好投入下一個冒險。ESTP 擅長察言觀色，能夠快速讀懂社交場合中的氛圍並做出適當的回應。他們思維敏捷，善於臨場應變，是危機處理的高手。ESTP 活在當下，享受即時的樂趣，對長遠的規劃較不感興趣。他們討厭被理論與抽象概念束縛，更喜歡動手實踐。ESTP 具有天生的說服力，能夠輕鬆影響他人的決定。然而，他們可能過於衝動，在行動前缺乏足夠的思考。他們有時會忽略他人的感受，顯得過於直接或冒犯。ESTP 需要學習考慮行動的長遠後果，以及更加關注他人的情感需求。他們適合從事銷售、創業、運動員或任何需要快速反應與人際互動的工作。</p>
+                    </div>
+                    <div class="personality-card">
+                        <h3><span class="type-code">ESFP</span> 表演者</h3>
+                        <p>ESFP 被稱為「表演者」，是最具表演天分與感染力的人格類型。他們熱愛生活，總是能夠找到樂趣並與他人分享快樂。ESFP 天生具有表演的才華，喜歡成為眾人關注的焦點，能夠輕鬆帶動氣氛。他們對感官體驗非常敏銳，喜歡美食、音樂、時尚與一切美好的事物。ESFP 慷慨大方，喜歡與朋友分享一切，是聚會中不可或缺的靈魂人物。他們活在當下，不太擔心未來，相信事情總會順利解決。然而，ESFP 可能過於追求即時的滿足，忽略了長遠的規劃與責任。他們對批評非常敏感，容易因為負面評價而受傷。ESFP 需要學習延遲滿足，以及面對生活中不那麼愉快的現實。他們適合從事表演藝術、娛樂產業、銷售或任何需要與人互動並帶來歡樂的工作。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 測驗區塊 -->
+        <section class="quiz-section">
+            <h2>MBTI 性格測驗</h2>
+            <p class="quiz-intro">回答以下 10 個問題，找出你的性格傾向</p>
+
+            <form id="quizForm">
+                <!-- 問題 1: E/I -->
+                <div class="question">
+                    <h4><span class="question-number">1</span>在社交聚會後，你通常會感到：</h4>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q1" value="E" required>
+                            <span class="option-marker"></span>
+                            精力充沛，想要繼續與人互動
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="I">
+                            <span class="option-marker"></span>
+                            需要獨處時間來恢復精力
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 問題 2: E/I -->
+                <div class="question">
+                    <h4><span class="question-number">2</span>當你需要思考重要決定時，你傾向於：</h4>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q2" value="E" required>
+                            <span class="option-marker"></span>
+                            與朋友或家人討論，透過交談釐清想法
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="I">
+                            <span class="option-marker"></span>
+                            獨自沉思，在內心深入分析各種可能性
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 問題 3: S/N -->
+                <div class="question">
+                    <h4><span class="question-number">3</span>在學習新事物時，你比較喜歡：</h4>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q3" value="S" required>
+                            <span class="option-marker"></span>
+                            從具體的例子和實際操作開始
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="N">
+                            <span class="option-marker"></span>
+                            先了解整體概念和背後的理論
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 問題 4: S/N -->
+                <div class="question">
+                    <h4><span class="question-number">4</span>在日常生活中，你更關注：</h4>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q4" value="S" required>
+                            <span class="option-marker"></span>
+                            眼前的現實情況和具體細節
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="N">
+                            <span class="option-marker"></span>
+                            未來的可能性和隱含的意義
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 問題 5: T/F -->
+                <div class="question">
+                    <h4><span class="question-number">5</span>當朋友向你傾訴煩惱時，你通常會：</h4>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q5" value="T" required>
+                            <span class="option-marker"></span>
+                            幫他們分析問題並提供解決方案
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="F">
+                            <span class="option-marker"></span>
+                            先傾聽和同理他們的感受
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 問題 6: T/F -->
+                <div class="question">
+                    <h4><span class="question-number">6</span>在做決定時，你更重視：</h4>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q6" value="T" required>
+                            <span class="option-marker"></span>
+                            邏輯分析和客觀的事實
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q6" value="F">
+                            <span class="option-marker"></span>
+                            個人價值觀和對他人的影響
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 問題 7: T/F -->
+                <div class="question">
+                    <h4><span class="question-number">7</span>你認為在工作或學習中，更重要的是：</h4>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q7" value="T" required>
+                            <span class="option-marker"></span>
+                            追求真理和正確性，即使可能傷害到某些人
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q7" value="F">
+                            <span class="option-marker"></span>
+                            維護和諧的關係，考慮每個人的感受
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 問題 8: J/P -->
+                <div class="question">
+                    <h4><span class="question-number">8</span>對於計畫和安排，你的態度是：</h4>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q8" value="J" required>
+                            <span class="option-marker"></span>
+                            喜歡提前規劃，按照計畫執行會讓我安心
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q8" value="P">
+                            <span class="option-marker"></span>
+                            喜歡保持彈性，隨機應變更讓我自在
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 問題 9: J/P -->
+                <div class="question">
+                    <h4><span class="question-number">9</span>在截止日期前完成任務時，你通常會：</h4>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q9" value="J" required>
+                            <span class="option-marker"></span>
+                            提早開始，穩步推進，確保提前完成
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q9" value="P">
+                            <span class="option-marker"></span>
+                            在壓力下更有動力，往往在最後一刻完成
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 問題 10: J/P -->
+                <div class="question">
+                    <h4><span class="question-number">10</span>你的工作或生活空間通常是：</h4>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q10" value="J" required>
+                            <span class="option-marker"></span>
+                            整齊有序，每樣東西都有固定的位置
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q10" value="P">
+                            <span class="option-marker"></span>
+                            看似凌亂但有自己的邏輯，隨性擺放
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">查看結果</button>
+            </form>
+        </section>
+
+        <!-- 結果區塊 -->
+        <section class="result-section" id="resultSection">
+            <h2>你的 MBTI 類型是</h2>
+            <div class="result-type" id="resultType"></div>
+            <div class="result-name" id="resultName"></div>
+
+            <div class="dimension-scores" id="dimensionScores"></div>
+
+            <div class="result-description" id="resultDescription"></div>
+
+            <button class="restart-btn" onclick="restartQuiz()">重新測驗</button>
+        </section>
+    </div>
+
+    <script>
+        // 性格類型資料
+        const personalityData = {
+            'INTJ': { name: '建築師', description: 'INTJ 被稱為「建築師」，是十六型人格中最具戰略思維的類型之一。他們擁有豐富的想像力與堅定的意志力，能夠將宏大的願景轉化為具體可行的計畫。INTJ 天生對知識充滿渴望，喜歡深入研究複雜的理論與系統，並且總是在尋找更有效率的方法來達成目標。他們獨立自主，不需要他人的認可來肯定自己的價值，反而更重視邏輯與理性的判斷。在社交場合中，INTJ 可能顯得較為冷淡或疏離，但這並非冷漠，而是他們習慣將精力投注在更有意義的事物上。他們是完美主義者，對自己和他人都有很高的標準，有時可能因此顯得過於嚴苛。INTJ 適合從事需要長遠規劃、策略分析的工作，如科學研究、工程設計或企業管理。' },
+            'INTP': { name: '邏輯學家', description: 'INTP 被稱為「邏輯學家」，是最具哲學思維與創新精神的人格類型。他們對知識的追求永無止境，喜歡探索宇宙萬物背後的運作原理。INTP 擁有極強的分析能力，能夠看穿表象直達事物的本質，這使他們成為出色的問題解決者。然而，他們時常沉浸在自己的思想世界中，可能會忽略現實生活中的瑣事。INTP 珍視獨處的時光，因為那是他們思考與創造的最佳時機。在人際關係中，他們可能顯得有些笨拙，不擅長表達情感，但對於真正理解他們的人，他們會展現出深厚的忠誠。INTP 討厭規則與傳統的束縛，更喜歡以開放的心態探索各種可能性。他們適合從事研究、程式設計、哲學或任何需要創新思維的領域。' },
+            'ENTJ': { name: '指揮官', description: 'ENTJ 被稱為「指揮官」，天生具備領導才能與強大的執行力。他們擁有清晰的願景與堅定的決心，能夠帶領團隊克服重重困難達成目標。ENTJ 非常重視效率，討厭浪費時間在無意義的事情上，總是直奔主題。他們具有敏銳的商業頭腦，善於發現機會並快速採取行動。在領導團隊時，ENTJ 會設定明確的目標與標準，並期待每個人都能全力以赴。他們直言不諱，有話直說的風格可能會讓某些人感到不適，但這種坦率也贏得了許多人的尊重。ENTJ 不害怕挑戰與衝突，反而將其視為成長的機會。然而，他們有時可能過於專注於目標而忽略了他人的感受。ENTJ 在商業管理、創業、法律或政治領域通常能有出色的表現。' },
+            'ENTP': { name: '辯論家', description: 'ENTP 被稱為「辯論家」，是最具創意與口才的人格類型之一。他們思維敏捷，喜歡挑戰既有的觀念與規則，總是能從不同的角度看待問題。ENTP 熱愛智識上的交鋒，享受辯論帶來的刺激感，有時甚至會為了辯論而辯論。他們充滿好奇心，對新事物總是充滿熱情，但可能因此而缺乏持續性，容易對已經開始的計畫失去興趣。ENTP 不喜歡被規則束縛，更傾向於打破常規，尋找創新的解決方案。他們在社交場合中魅力十足，能夠輕鬆與各種人建立連結，但深層的情感交流對他們來說可能是一個挑戰。ENTP 需要學習傾聽他人的想法，而不只是急於表達自己的觀點。他們適合從事創業、行銷、法律或任何需要創新與說服力的工作。' },
+            'INFJ': { name: '提倡者', description: 'INFJ 被稱為「提倡者」，是十六型人格中最稀有的類型之一。他們擁有深刻的洞察力與強烈的理想主義，總是希望能夠讓世界變得更美好。INFJ 具有獨特的能力，能夠理解他人內心深處的情感與動機，這使他們成為出色的傾聽者與輔導者。他們追求有意義的人際關係，不滿足於膚淺的社交，而是渴望真正深入的心靈交流。INFJ 有著豐富的內心世界，時常沉浸在自己的思想與幻想中。他們對自己的價值觀非常堅持，一旦認定某件事是正確的，就會全力以赴去實現。然而，INFJ 可能會因為過於在意他人的需求而忽略自己的感受，導致精力耗竭。他們適合從事諮商、寫作、教育或任何能夠幫助他人的工作。' },
+            'INFP': { name: '調停者', description: 'INFP 被稱為「調停者」，是最具詩意與理想色彩的人格類型。他們擁有豐富的想像力與深刻的情感，對藝術、文學與人文領域有著天然的親和力。INFP 追求真實與真誠，討厭虛偽與表面功夫，總是希望能夠活出最真實的自己。他們有著強烈的價值觀，會為自己相信的理念奮戰到底。在人際關係中，INFP 渴望深層的情感連結，重視理解與被理解。他們可能顯得有些內向與害羞，但內心其實充滿熱情與創意。INFP 時常陷入自我懷疑，對自己要求過高，需要學習接納自己的不完美。他們對批評非常敏感，容易將他人的評論往心裡去。INFP 適合從事寫作、藝術創作、心理諮商或任何能讓他們表達內心世界的工作。' },
+            'ENFJ': { name: '主人公', description: 'ENFJ 被稱為「主人公」，天生具備領袖魅力與強大的感染力。他們熱情洋溢，真誠關心他人的成長與幸福，總是願意伸出援手幫助需要幫助的人。ENFJ 擁有出色的人際交往能力，能夠輕鬆建立深厚的人際關係，並在團體中扮演凝聚人心的角色。他們對他人的情緒非常敏感，能夠察覺到細微的情感變化。ENFJ 有著強烈的使命感，希望能夠對社會產生正面的影響，常常投身於公益活動或社會運動。然而，他們有時可能過於在意他人的評價，或者為了維持和諧而壓抑自己的真實感受。ENFJ 需要學習設立健康的界線，避免為他人付出過多而忽略自己的需求。他們適合從事教育、人力資源、社會工作或任何需要領導與激勵他人的職位。' },
+            'ENFP': { name: '競選者', description: 'ENFP 被稱為「競選者」，是最具熱情與創造力的人格類型之一。他們對生活充滿好奇心，總是在尋找新的體驗與冒險。ENFP 擁有感染他人的正面能量，能夠輕鬆帶動周圍的氣氛，讓人們感到快樂與希望。他們具有豐富的想像力，喜歡探索各種可能性，討厭被規則與傳統所限制。ENFP 真誠地關心他人，善於傾聽並給予支持，是朋友眼中值得信賴的夥伴。然而，他們可能因為興趣太廣泛而難以專注在單一目標上，容易半途而廢。ENFP 討厭例行公事與重複性的工作，需要不斷的刺激與變化來保持動力。他們有時可能過於理想化，對現實的殘酷面缺乏準備。ENFP 適合從事創意產業、公關、心理諮詢或任何能讓他們發揮創意與人際能力的工作。' },
+            'ISTJ': { name: '物流師', description: 'ISTJ 被稱為「物流師」，是最可靠與負責任的人格類型之一。他們重視傳統、規則與秩序，相信通過努力工作與遵守規範可以達成目標。ISTJ 做事一絲不苟，注重細節，總是能夠準時完成任務。他們對承諾極為認真，一旦答應的事情就會全力以赴去實現。ISTJ 喜歡有條理的生活，討厭混亂與不確定性，會花時間規劃每一個步驟。在工作中，他們是可靠的執行者，能夠獨立完成複雜的任務。然而，ISTJ 可能顯得過於嚴肅或固執，不太願意嘗試新的方法。他們在情感表達上可能較為含蓄，不擅長處理情緒化的場面。ISTJ 需要學習更加開放地接受變化，以及在必要時表達自己的感受。他們適合從事會計、法律、工程或任何需要精確與可靠性的工作。' },
+            'ISFJ': { name: '守衛者', description: 'ISFJ 被稱為「守衛者」，是最具奉獻精神與溫暖特質的人格類型。他們默默付出，不求回報，總是將他人的需求放在自己之前。ISFJ 有著極強的責任感，對家庭、朋友與工作都投入大量的心力。他們記性很好，會記得每一個重要的細節與日期，用心維護與他人的關係。ISFJ 喜歡和諧的環境，會盡力避免衝突，有時甚至會犧牲自己的立場來維持和平。他們對傳統與習俗有著深厚的情感，珍視那些經過時間考驗的價值觀。然而，ISFJ 可能過於在意他人的評價，害怕讓人失望。他們需要學習說「不」，並且照顧好自己的需求。ISFJ 的付出常常被視為理所當然，但他們真的需要被感謝與認可。他們適合從事護理、教育、行政或任何需要細心與關懷的工作。' },
+            'ESTJ': { name: '總經理', description: 'ESTJ 被稱為「總經理」，是最具組織能力與執行力的人格類型。他們相信規則與秩序，擅長建立系統並確保每個人都遵守規範。ESTJ 天生具備領導才能，能夠清楚地傳達指令並督促團隊達成目標。他們務實且直接，不喜歡繞圈子，總是以效率為優先考量。ESTJ 對工作極為認真，以身作則，期待他人也能達到同樣的標準。他們重視傳統與社會規範，認為這些是維持社會運作的重要基石。然而，ESTJ 可能顯得過於強勢或專制，不太願意傾聽不同的意見。他們在處理情感問題時可能顯得笨拙，更習慣用邏輯來解決一切。ESTJ 需要學習更加尊重他人的感受與觀點，培養同理心。他們適合從事管理、軍事、法律執行或任何需要組織與領導能力的職位。' },
+            'ESFJ': { name: '執政官', description: 'ESFJ 被稱為「執政官」，是最具社交能力與關懷特質的人格類型之一。他們天生喜歡照顧他人，總是能夠察覺到周圍人的需求並主動提供幫助。ESFJ 重視和諧的人際關係，會努力維護團體的凝聚力與向心力。他們喜歡社交活動，擅長組織聚會並確保每個人都感到受歡迎。ESFJ 對傳統與禮儀非常重視，認為這些是維繫社會連結的重要紐帶。他們忠誠可靠，是朋友和家人可以依賴的後盾。然而，ESFJ 可能過於在意他人的評價，容易因為批評而受傷。他們有時會為了取悅他人而忽略自己的需求，或者過度干涉他人的生活。ESFJ 需要學習接受並非所有人都會喜歡自己這個事實，並且尊重他人的界限。他們適合從事醫療照護、教育、活動企劃或任何需要人際互動的工作。' },
+            'ISTP': { name: '鑑賞家', description: 'ISTP 被稱為「鑑賞家」，是最具動手能力與冷靜特質的人格類型。他們對機械、工具與技術有著天生的興趣，喜歡親手拆解並理解事物的運作原理。ISTP 擅長在壓力下保持冷靜，能夠快速分析問題並找出解決方案。他們喜歡獨立工作，不太需要他人的指導或監督，更偏好以自己的方式完成任務。ISTP 活在當下，享受即時的感官體驗，對長遠規劃較不感興趣。他們討厭被規則束縛，喜歡保持靈活與自由。在人際關係中，ISTP 可能顯得冷漠或疏離，因為他們不擅長表達情感。然而，他們對真正在乎的人其實非常忠誠。ISTP 可能會冒不必要的風險來追求刺激，需要學習考慮行動的後果。他們適合從事工程、技術維修、急救人員或任何需要動手解決問題的工作。' },
+            'ISFP': { name: '探險家', description: 'ISFP 被稱為「探險家」，是最具藝術氣質與溫和特性的人格類型。他們對美有著敏銳的感受力，能夠在日常生活中發現他人忽略的美好事物。ISFP 活在當下，享受每一個瞬間，不太擔心未來或糾結過去。他們具有強烈的個人價值觀，但不會將其強加於他人，更傾向於用行動而非言語來表達自己。ISFP 喜歡和諧的環境，會盡量避免衝突與對抗。他們對他人的感受非常敏感，能夠提供溫暖的支持與陪伴。然而，ISFP 可能過於迴避衝突，即使在需要表達立場的時候也選擇沉默。他們有時會因為過於在意他人的感受而壓抑自己的需求。ISFP 需要學習更加勇敢地表達自己，並接受衝突有時是必要的。他們適合從事藝術創作、設計、音樂或任何能讓他們發揮創意的工作。' },
+            'ESTP': { name: '企業家', description: 'ESTP 被稱為「企業家」，是最具行動力與冒險精神的人格類型。他們活力充沛，喜歡刺激與挑戰，總是準備好投入下一個冒險。ESTP 擅長察言觀色，能夠快速讀懂社交場合中的氛圍並做出適當的回應。他們思維敏捷，善於臨場應變，是危機處理的高手。ESTP 活在當下，享受即時的樂趣，對長遠的規劃較不感興趣。他們討厭被理論與抽象概念束縛，更喜歡動手實踐。ESTP 具有天生的說服力，能夠輕鬆影響他人的決定。然而，他們可能過於衝動，在行動前缺乏足夠的思考。他們有時會忽略他人的感受，顯得過於直接或冒犯。ESTP 需要學習考慮行動的長遠後果，以及更加關注他人的情感需求。他們適合從事銷售、創業、運動員或任何需要快速反應與人際互動的工作。' },
+            'ESFP': { name: '表演者', description: 'ESFP 被稱為「表演者」，是最具表演天分與感染力的人格類型。他們熱愛生活，總是能夠找到樂趣並與他人分享快樂。ESFP 天生具有表演的才華，喜歡成為眾人關注的焦點，能夠輕鬆帶動氣氛。他們對感官體驗非常敏銳，喜歡美食、音樂、時尚與一切美好的事物。ESFP 慷慨大方，喜歡與朋友分享一切，是聚會中不可或缺的靈魂人物。他們活在當下，不太擔心未來，相信事情總會順利解決。然而，ESFP 可能過於追求即時的滿足，忽略了長遠的規劃與責任。他們對批評非常敏感，容易因為負面評價而受傷。ESFP 需要學習延遲滿足，以及面對生活中不那麼愉快的現實。他們適合從事表演藝術、娛樂產業、銷售或任何需要與人互動並帶來歡樂的工作。' }
+        };
+
+        // 標籤切換功能
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.type-group').forEach(g => g.classList.remove('active'));
+
+                this.classList.add('active');
+                document.getElementById(this.dataset.group).classList.add('active');
+            });
+        });
+
+        // 選項點擊效果
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                const questionDiv = this.closest('.question');
+                questionDiv.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                this.querySelector('input').checked = true;
+            });
+        });
+
+        // 表單提交
+        document.getElementById('quizForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const answers = {};
+
+            for (let [key, value] of formData.entries()) {
+                answers[key] = value;
+            }
+
+            // 檢查是否所有問題都已回答
+            if (Object.keys(answers).length < 10) {
+                alert('請回答所有問題！');
+                return;
+            }
+
+            // 計算各維度分數
+            let E = 0, I = 0, S = 0, N = 0, T = 0, F = 0, J = 0, P = 0;
+
+            // E/I 維度 (問題 1, 2)
+            if (answers.q1 === 'E') E++; else I++;
+            if (answers.q2 === 'E') E++; else I++;
+
+            // S/N 維度 (問題 3, 4)
+            if (answers.q3 === 'S') S++; else N++;
+            if (answers.q4 === 'S') S++; else N++;
+
+            // T/F 維度 (問題 5, 6, 7)
+            if (answers.q5 === 'T') T++; else F++;
+            if (answers.q6 === 'T') T++; else F++;
+            if (answers.q7 === 'T') T++; else F++;
+
+            // J/P 維度 (問題 8, 9, 10)
+            if (answers.q8 === 'J') J++; else P++;
+            if (answers.q9 === 'J') J++; else P++;
+            if (answers.q10 === 'J') J++; else P++;
+
+            // 決定類型
+            const type = (E >= I ? 'E' : 'I') +
+                        (S >= N ? 'S' : 'N') +
+                        (T >= F ? 'T' : 'F') +
+                        (J >= P ? 'J' : 'P');
+
+            // 顯示結果
+            showResult(type, {
+                EI: { E: E, I: I },
+                SN: { S: S, N: N },
+                TF: { T: T, F: F },
+                JP: { J: J, P: P }
+            });
+        });
+
+        function showResult(type, scores) {
+            const data = personalityData[type];
+
+            document.getElementById('resultType').textContent = type;
+            document.getElementById('resultName').textContent = data.name;
+            document.getElementById('resultDescription').textContent = data.description;
+
+            // 顯示維度分數
+            const dimensionScores = document.getElementById('dimensionScores');
+            dimensionScores.innerHTML = `
+                <div class="dimension">
+                    <div class="dimension-label">
+                        <span>內向 (I)</span>
+                        <span>外向 (E)</span>
+                    </div>
+                    <div class="dimension-bar">
+                        <div class="dimension-fill" style="width: ${scores.EI.E / 2 * 100}%; margin-left: ${scores.EI.I / 2 * 100}%;"></div>
+                    </div>
+                </div>
+                <div class="dimension">
+                    <div class="dimension-label">
+                        <span>實感 (S)</span>
+                        <span>直覺 (N)</span>
+                    </div>
+                    <div class="dimension-bar">
+                        <div class="dimension-fill" style="width: ${scores.SN.N / 2 * 100}%; margin-left: ${scores.SN.S / 2 * 100}%;"></div>
+                    </div>
+                </div>
+                <div class="dimension">
+                    <div class="dimension-label">
+                        <span>思考 (T)</span>
+                        <span>情感 (F)</span>
+                    </div>
+                    <div class="dimension-bar">
+                        <div class="dimension-fill" style="width: ${scores.TF.F / 3 * 100}%; margin-left: ${scores.TF.T / 3 * 100}%;"></div>
+                    </div>
+                </div>
+                <div class="dimension">
+                    <div class="dimension-label">
+                        <span>判斷 (J)</span>
+                        <span>感知 (P)</span>
+                    </div>
+                    <div class="dimension-bar">
+                        <div class="dimension-fill" style="width: ${scores.JP.P / 3 * 100}%; margin-left: ${scores.JP.J / 3 * 100}%;"></div>
+                    </div>
+                </div>
+            `;
+
+            const resultSection = document.getElementById('resultSection');
+            resultSection.classList.add('show');
+            resultSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function restartQuiz() {
+            document.getElementById('quizForm').reset();
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            document.getElementById('resultSection').classList.remove('show');
+            document.querySelector('.quiz-section').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
